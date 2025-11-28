@@ -66,6 +66,16 @@ export default function Footer() {
               Artikel
             </Link>
             <Link
+              href="/reviews"
+              className={`text-sm transition-colors ${
+                pathname === '/reviews'
+                  ? 'text-[#C3E41D]'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-[#C3E41D]'
+              }`}
+            >
+              Bewertungen
+            </Link>
+            <Link
               href="/contact"
               className={`text-sm transition-colors ${
                 pathname === '/contact'

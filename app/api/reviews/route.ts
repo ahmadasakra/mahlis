@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
 
     const review = await Review.create({
       courseId,
+      type: 'course',
       rating,
       comment,
       studentName: isAnonymous ? undefined : studentName,
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const courseId = searchParams.get('courseId');
 
-    const query: any = { isPublic: true };
+    const query: any = { isPublic: true, type: 'course' };
     if (courseId) {
       query.courseId = courseId;
     }

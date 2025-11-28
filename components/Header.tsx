@@ -54,6 +54,7 @@ export default function Header() {
     { label: "HOME", href: "/", highlight: pathname === "/" },
     { label: "KURSE", href: "/courses", highlight: pathname?.startsWith("/courses") },
     { label: "ARTIKEL", href: "/articles", highlight: pathname?.startsWith("/articles") },
+    { label: "BEWERTUNGEN", href: "/reviews", highlight: pathname === "/reviews" },
     { label: "KONTAKT", href: "/contact", highlight: pathname === "/contact" },
   ];
 
