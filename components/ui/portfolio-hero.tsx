@@ -128,7 +128,13 @@ export default function PortfolioHero() {
         {/* Scroll Indicator */}
         <button
           type="button"
-          className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 transition-colors duration-300"
+          onClick={() => {
+            const articlesSection = document.getElementById('articles');
+            if (articlesSection) {
+              articlesSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+          className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 transition-colors duration-300 cursor-pointer"
           aria-label="Scroll down"
         >
           <ChevronDown className="w-5 h-5 md:w-8 md:h-8 text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-300" />
