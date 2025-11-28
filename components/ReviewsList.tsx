@@ -48,12 +48,12 @@ export default function ReviewsList({ courseId }: ReviewsListProps) {
   }, [courseId]);
 
   if (loading) {
-    return <div className="text-neutral-500">Lade Bewertungen...</div>;
+    return <div className="text-neutral-500 dark:text-neutral-400">Lade Bewertungen...</div>;
   }
 
   if (reviews.length === 0) {
     return (
-      <div className="text-center py-8 text-neutral-500">
+      <div className="text-center py-8 text-neutral-500 dark:text-neutral-400">
         Noch keine Bewertungen vorhanden.
       </div>
     );
@@ -62,18 +62,18 @@ export default function ReviewsList({ courseId }: ReviewsListProps) {
   return (
     <div>
       {averageRating > 0 && (
-        <div className="mb-6 p-4 bg-neutral-900 rounded-lg">
+        <div className="mb-6 p-4 bg-neutral-100 dark:bg-neutral-900 rounded-lg border border-neutral-300 dark:border-neutral-800">
           <div className="flex items-center gap-2 mb-1">
             <Star className="w-6 h-6 fill-yellow-400 text-yellow-400" />
             <span className="text-2xl font-bold">{averageRating.toFixed(1)}</span>
-            <span className="text-neutral-400">({reviews.length} Bewertungen)</span>
+            <span className="text-neutral-600 dark:text-neutral-400">({reviews.length} Bewertungen)</span>
           </div>
         </div>
       )}
 
       <div className="space-y-4">
         {reviews.map((review) => (
-          <div key={review._id} className="p-4 bg-neutral-900 rounded-lg">
+          <div key={review._id} className="p-4 bg-neutral-100 dark:bg-neutral-900 rounded-lg border border-neutral-300 dark:border-neutral-800">
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-2">
                 <div className="flex gap-0.5">
@@ -83,28 +83,28 @@ export default function ReviewsList({ courseId }: ReviewsListProps) {
                       className={`w-4 h-4 ${
                         star <= review.rating
                           ? 'fill-yellow-400 text-yellow-400'
-                          : 'text-neutral-600'
+                          : 'text-neutral-400 dark:text-neutral-600'
                       }`}
                     />
                   ))}
                 </div>
-                <span className="text-sm text-neutral-400">
+                <span className="text-sm text-neutral-600 dark:text-neutral-400">
                   {review.isAnonymous
                     ? 'Anonym'
                     : review.studentName || 'Anonym'}
                 </span>
               </div>
-              <span className="text-xs text-neutral-500">
+              <span className="text-xs text-neutral-500 dark:text-neutral-400">
                 {new Date(review.createdAt).toLocaleDateString('de-DE')}
               </span>
             </div>
             {review.comment && (
-              <p className="text-neutral-300 mt-2 whitespace-pre-line">
+              <p className="text-neutral-700 dark:text-neutral-300 mt-2 whitespace-pre-line">
                 {review.comment}
               </p>
             )}
             {review.courseId && !courseId && (
-              <p className="text-xs text-neutral-500 mt-2">
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
                 Kurs: {review.courseId.titleDe}
               </p>
             )}

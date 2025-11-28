@@ -62,7 +62,7 @@ export default function ReviewForm({ courseId }: ReviewFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 p-6 bg-neutral-900 rounded-lg">
+    <form onSubmit={handleSubmit} className="mb-8 p-6 bg-neutral-100 dark:bg-neutral-900 rounded-lg border border-neutral-300 dark:border-neutral-800">
       <h3 className="text-xl font-semibold mb-4" style={{ color: '#C3E41D' }}>
         Bewertung abgeben
       </h3>
@@ -83,7 +83,7 @@ export default function ReviewForm({ courseId }: ReviewFormProps) {
                 className={`w-8 h-8 transition-colors ${
                   star <= (hoveredRating || rating)
                     ? 'fill-yellow-400 text-yellow-400'
-                    : 'text-neutral-600'
+                    : 'text-neutral-400 dark:text-neutral-600'
                 }`}
               />
             </button>
@@ -100,7 +100,7 @@ export default function ReviewForm({ courseId }: ReviewFormProps) {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           rows={4}
-          className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:border-[#C3E41D]"
+          className="w-full px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D]"
           placeholder="Teile deine Erfahrungen mit diesem Kurs..."
         />
       </div>
@@ -115,7 +115,7 @@ export default function ReviewForm({ courseId }: ReviewFormProps) {
           value={studentName}
           onChange={(e) => setStudentName(e.target.value)}
           disabled={isAnonymous}
-          className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:border-[#C3E41D] disabled:opacity-50"
+          className="w-full px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D] disabled:opacity-50"
           placeholder="Dein Name"
         />
       </div>
@@ -126,9 +126,9 @@ export default function ReviewForm({ courseId }: ReviewFormProps) {
             type="checkbox"
             checked={isAnonymous}
             onChange={(e) => setIsAnonymous(e.target.checked)}
-            className="w-4 h-4 rounded border-neutral-700 bg-neutral-800 text-[#C3E41D] focus:ring-[#C3E41D]"
+            className="w-4 h-4 rounded border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-[#C3E41D] focus:ring-[#C3E41D]"
           />
-          <span className="text-sm text-neutral-400">Anonym bewerten</span>
+          <span className="text-sm text-neutral-600 dark:text-neutral-400">Anonym bewerten</span>
         </label>
       </div>
 

@@ -23,22 +23,24 @@ interface Course {
 async function getCourse(id: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/courses`, { cache: 'no-store' });
+    const res = await fetch(`${baseUrl}/api/courses/${id}`, { 
+      cache: 'no-store',
+    });
     if (!res.ok) return null;
-    const courses = await res.json();
-    return courses.find((c: Course) => c._id === id) || null;
+    return await res.json();
   } catch (error) {
     console.error('Error fetching course:', error);
     return null;
   }
 }
 
-export default async function CourseDetailPage({ params }: { params: { id: string } }) {
-  const course: Course | null = await getCourse(params.id);
+export default async function CourseDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const course: Course | null = await getCourse(id);
 
   if (!course) {
     return (
-      <div className="min-h-screen bg-black text-white pt-24 px-6 pb-12">
+      <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white pt-24 px-6 pb-12 transition-colors">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl font-bold mb-4">Kurs nicht gefunden</h1>
           <Link href="/courses" className="text-[#C3E41D] hover:underline">
@@ -50,11 +52,11 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pt-24 px-6 pb-12">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white pt-24 px-6 pb-12 transition-colors">
       <div className="max-w-4xl mx-auto">
         <Link 
           href="/courses" 
-          className="inline-block mb-6 text-neutral-400 hover:text-[#C3E41D] transition-colors"
+          className="inline-block mb-6 text-neutral-600 dark:text-neutral-400 hover:text-[#C3E41D] transition-colors"
         >
           ← Zurück zu den Kursen
         </Link>
@@ -64,15 +66,15 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
             {course.titleDe}
           </h1>
           {course.titleAr && (
-            <h2 className="text-2xl md:text-3xl mb-6 text-neutral-400">{course.titleAr}</h2>
+            <h2 className="text-2xl md:text-3xl mb-6 text-neutral-600 dark:text-neutral-400">{course.titleAr}</h2>
           )}
 
           <div className="prose prose-invert max-w-none mb-8">
-            <p className="text-neutral-300 leading-relaxed whitespace-pre-line">
+            <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed whitespace-pre-line">
               {course.descriptionDe}
             </p>
             {course.descriptionAr && (
-              <p className="text-neutral-300 leading-relaxed mt-4 whitespace-pre-line" dir="rtl">
+              <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mt-4 whitespace-pre-line" dir="rtl">
                 {course.descriptionAr}
               </p>
             )}
@@ -80,17 +82,17 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
 
           <div className="flex flex-wrap gap-4 mb-8 text-sm">
             {course.language && (
-              <span className="px-3 py-1 bg-neutral-800 rounded-full">
+              <span className="px-3 py-1 bg-neutral-200 dark:bg-neutral-800 rounded-full">
                 Sprache: {course.language === 'both' ? 'DE / AR' : course.language.toUpperCase()}
               </span>
             )}
             {course.price && (
-              <span className="px-3 py-1 bg-neutral-800 rounded-full">
+              <span className="px-3 py-1 bg-neutral-200 dark:bg-neutral-800 rounded-full">
                 Preis: {course.price}€
               </span>
             )}
             {course.startDate && (
-              <span className="px-3 py-1 bg-neutral-800 rounded-full">
+              <span className="px-3 py-1 bg-neutral-200 dark:bg-neutral-800 rounded-full">
                 Start: {new Date(course.startDate).toLocaleDateString('de-DE')}
               </span>
             )}
@@ -108,7 +110,7 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
                     href={material.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block p-3 bg-neutral-900 rounded hover:bg-neutral-800 transition-colors"
+                    className="block p-3 bg-neutral-100 dark:bg-neutral-900 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
                   >
                     📄 {material.fileName}
                   </a>
@@ -118,7 +120,7 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
           )}
         </article>
 
-        <div className="border-t border-neutral-800 pt-12">
+        <div className="border-t border-neutral-300 dark:border-neutral-800 pt-12">
           <h2 className="text-3xl font-bold mb-8" style={{ color: '#C3E41D' }}>
             Bewertungen
           </h2>
