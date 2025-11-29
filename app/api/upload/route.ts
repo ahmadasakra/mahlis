@@ -46,7 +46,8 @@ export async function POST(request: NextRequest) {
       Key: filename,
       Body: buffer,
       ContentType: file.type,
-      ACL: 'public-read', // Damit die Bilder öffentlich zugänglich sind
+      // ACL wird nicht verwendet, da der Bucket ACLs nicht unterstützt
+      // Stattdessen wird eine Bucket Policy für öffentlichen Zugriff verwendet
     });
 
     await s3Client.send(command);
