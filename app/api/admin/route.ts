@@ -81,16 +81,18 @@ export async function PUT(request: NextRequest) {
     await connectDB();
     const { type, id, ...data } = await request.json();
 
+    console.log('API: Updating', type, 'with data:', data); // Debug
+
     let result;
     switch (type) {
       case 'course':
-        result = await Course.findByIdAndUpdate(id, data, { new: true });
+        result = await Course.findByIdAndUpdate(id, data, { new: true, runValidators: true });
         break;
       case 'article':
-        result = await Article.findByIdAndUpdate(id, data, { new: true });
+        result = await Article.findByIdAndUpdate(id, data, { new: true, runValidators: true });
         break;
       case 'review':
-        result = await Review.findByIdAndUpdate(id, data, { new: true });
+        result = await Review.findByIdAndUpdate(id, data, { new: true, runValidators: true });
         break;
       default:
         return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
@@ -100,6 +102,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
+    console.log('API: Updated result:', result); // Debug
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error updating:', error);

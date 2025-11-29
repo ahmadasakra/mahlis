@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 import RichTextEditor from '@/components/RichTextEditor';
+import ImageUpload from '@/components/ImageUpload';
 
 export default function NewArticlePage() {
   const router = useRouter();
@@ -37,17 +38,32 @@ export default function NewArticlePage() {
     setError('');
 
     try {
+      const payload: any = {
+        type: 'article',
+        titleDe: formData.titleDe,
+        contentDe: formData.contentDe,
+        status: formData.status,
+      };
+      
+      // Füge optionale Felder nur hinzu, wenn sie einen Wert haben
+      if (formData.titleAr?.trim()) payload.titleAr = formData.titleAr.trim();
+      if (formData.contentAr?.trim()) payload.contentAr = formData.contentAr.trim();
+      if (formData.excerptDe?.trim()) payload.excerptDe = formData.excerptDe.trim();
+      if (formData.excerptAr?.trim()) payload.excerptAr = formData.excerptAr.trim();
+      if (formData.featuredImage?.trim()) payload.featuredImage = formData.featuredImage.trim();
+      
+      if (formData.status === 'published') {
+        payload.publishedAt = new Date().toISOString();
+      }
+      console.log('Saving article with payload:', payload); // Debug
+      
       const res = await fetch('/api/admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': apiKey,
         },
-        body: JSON.stringify({
-          type: 'article',
-          ...formData,
-          publishedAt: formData.status === 'published' ? new Date().toISOString() : undefined,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
@@ -156,31 +172,12 @@ export default function NewArticlePage() {
           </div>
 
           {/* Featured Image */}
-          <div>
-            <label htmlFor="featuredImage" className="block text-sm font-medium mb-2">
-              Featured Image (URL)
-            </label>
-            <input
-              id="featuredImage"
-              type="url"
-              value={formData.featuredImage}
-              onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
-              className="w-full px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D]"
-              placeholder="https://example.com/image.jpg"
-            />
-            {formData.featuredImage && (
-              <div className="mt-3">
-                <img
-                  src={formData.featuredImage}
-                  alt="Preview"
-                  className="w-full max-w-md h-auto rounded-lg border border-neutral-300 dark:border-neutral-700"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              </div>
-            )}
-          </div>
+          <ImageUpload
+            value={formData.featuredImage}
+            onChange={(url) => setFormData({ ...formData, featuredImage: url })}
+            label="Featured Image"
+            placeholder="Bild-URL oder Datei hochladen"
+          />
 
           {/* Content DE */}
           <div>
