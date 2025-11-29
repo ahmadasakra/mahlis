@@ -9,7 +9,6 @@ import ImageUpload from '@/components/ImageUpload';
 
 export default function NewArticlePage() {
   const router = useRouter();
-  const [apiKey, setApiKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -24,13 +23,20 @@ export default function NewArticlePage() {
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin_api_key');
-    if (!saved) {
-      router.push('/admin');
-      return;
-    }
-    setApiKey(saved);
+    // Prüfe ob eingeloggt
+    checkAuth();
   }, [router]);
+
+  const checkAuth = async () => {
+    try {
+      const res = await fetch('/api/admin');
+      if (!res.ok) {
+        router.push('/admin');
+      }
+    } catch (err) {
+      router.push('/admin');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +67,6 @@ export default function NewArticlePage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
         },
         body: JSON.stringify(payload),
       });

@@ -3,12 +3,9 @@ import connectDB from '@/lib/mongodb';
 import Course from '@/models/Course';
 import Review from '@/models/Review';
 import Article from '@/models/Article';
+import { isAuthorized } from '@/lib/auth';
 
-// Einfache API-Key Auth
-function isAuthorized(request: NextRequest) {
-  const apiKey = request.headers.get('x-api-key');
-  return apiKey === process.env.ADMIN_API_KEY;
-}
+// Auth wird jetzt über JWT Token in Cookies gehandhabt
 
 // GET - Alle Daten abrufen
 export async function GET(request: NextRequest) {

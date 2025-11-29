@@ -7,7 +7,6 @@ import Link from 'next/link';
 
 export default function NewCoursePage() {
   const router = useRouter();
-  const [apiKey, setApiKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -23,13 +22,20 @@ export default function NewCoursePage() {
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin_api_key');
-    if (!saved) {
-      router.push('/admin');
-      return;
-    }
-    setApiKey(saved);
+    // Prüfe ob eingeloggt
+    checkAuth();
   }, [router]);
+
+  const checkAuth = async () => {
+    try {
+      const res = await fetch('/api/admin');
+      if (!res.ok) {
+        router.push('/admin');
+      }
+    } catch (err) {
+      router.push('/admin');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +47,6 @@ export default function NewCoursePage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
         },
         body: JSON.stringify({
           type: 'course',
@@ -66,11 +71,11 @@ export default function NewCoursePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white pt-24 px-6 pb-12">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white pt-24 px-6 pb-12 transition-colors">
       <div className="max-w-4xl mx-auto">
         <Link
           href="/admin?tab=courses"
-          className="inline-flex items-center gap-2 mb-6 text-neutral-400 hover:text-[#C3E41D] transition-colors"
+          className="inline-flex items-center gap-2 mb-6 text-neutral-600 dark:text-neutral-400 hover:text-[#C3E41D] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Zurück zum Admin
@@ -87,7 +92,7 @@ export default function NewCoursePage() {
             <select
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value as 'draft' | 'published' | 'archived' })}
-              className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-[#C3E41D]"
+              className="w-full px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white focus:outline-none focus:border-[#C3E41D]"
             >
               <option value="draft">Entwurf</option>
               <option value="published">Veröffentlicht</option>
@@ -106,7 +111,7 @@ export default function NewCoursePage() {
               required
               value={formData.titleDe}
               onChange={(e) => setFormData({ ...formData, titleDe: e.target.value })}
-              className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:border-[#C3E41D]"
+              className="w-full px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D]"
               placeholder="Kurs-Titel auf Deutsch"
             />
           </div>
@@ -121,7 +126,7 @@ export default function NewCoursePage() {
               type="text"
               value={formData.titleAr}
               onChange={(e) => setFormData({ ...formData, titleAr: e.target.value })}
-              className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:border-[#C3E41D]"
+              className="w-full px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D]"
               placeholder="عنوان الدورة بالعربية"
               dir="rtl"
             />
@@ -138,7 +143,7 @@ export default function NewCoursePage() {
               rows={6}
               value={formData.descriptionDe}
               onChange={(e) => setFormData({ ...formData, descriptionDe: e.target.value })}
-              className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:border-[#C3E41D] resize-none"
+              className="w-full px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D] resize-none"
               placeholder="Ausführliche Kursbeschreibung auf Deutsch..."
             />
           </div>
@@ -153,7 +158,7 @@ export default function NewCoursePage() {
               rows={6}
               value={formData.descriptionAr}
               onChange={(e) => setFormData({ ...formData, descriptionAr: e.target.value })}
-              className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:border-[#C3E41D] resize-none"
+              className="w-full px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D] resize-none"
               placeholder="وصف مفصل للدورة بالعربية..."
               dir="rtl"
             />
@@ -166,7 +171,7 @@ export default function NewCoursePage() {
               <select
                 value={formData.language}
                 onChange={(e) => setFormData({ ...formData, language: e.target.value as 'de' | 'ar' | 'both' })}
-                className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-[#C3E41D]"
+                className="w-full px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white focus:outline-none focus:border-[#C3E41D]"
               >
                 <option value="de">Deutsch</option>
                 <option value="ar">Arabisch</option>
@@ -184,7 +189,7 @@ export default function NewCoursePage() {
                 min="0"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:border-[#C3E41D]"
+                className="w-full px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D]"
                 placeholder="99.00"
               />
             </div>
@@ -201,7 +206,7 @@ export default function NewCoursePage() {
                 type="date"
                 value={formData.startDate}
                 onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-[#C3E41D]"
+                className="w-full px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white focus:outline-none focus:border-[#C3E41D]"
               />
             </div>
             <div>
@@ -213,13 +218,13 @@ export default function NewCoursePage() {
                 type="date"
                 value={formData.endDate}
                 onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-[#C3E41D]"
+                className="w-full px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white focus:outline-none focus:border-[#C3E41D]"
               />
             </div>
           </div>
 
           {error && (
-            <div className="p-4 bg-red-900/30 text-red-400 rounded-lg">
+            <div className="p-4 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-lg">
               {error}
             </div>
           )}
@@ -236,7 +241,7 @@ export default function NewCoursePage() {
             </button>
             <Link
               href="/admin?tab=courses"
-              className="px-6 py-3 rounded-lg font-semibold bg-neutral-800 hover:bg-neutral-700 transition-colors"
+              className="px-6 py-3 rounded-lg font-semibold bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors text-black dark:text-white"
             >
               Abbrechen
             </Link>

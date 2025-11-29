@@ -22,7 +22,6 @@ interface Article {
 export default function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const [articleId, setArticleId] = useState<string>('');
-  const [apiKey, setApiKey] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -46,22 +45,27 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
   }, [params]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin_api_key');
-    if (!saved) {
-      router.push('/admin');
-      return;
-    }
-    setApiKey(saved);
+    // Prüfe ob eingeloggt
+    checkAuth();
   }, [router]);
+
+  const checkAuth = async () => {
+    try {
+      const res = await fetch('/api/admin');
+      if (!res.ok) {
+        router.push('/admin');
+      }
+    } catch (err) {
+      router.push('/admin');
+    }
+  };
 
   useEffect(() => {
     async function fetchArticle() {
-      if (!articleId || !apiKey) return;
+      if (!articleId) return;
       
       try {
-        const res = await fetch('/api/admin', {
-          headers: { 'x-api-key': apiKey },
-        });
+        const res = await fetch('/api/admin');
         if (res.ok) {
           const data = await res.json();
           const article = data.articles?.find((a: Article) => a._id === articleId);
@@ -90,10 +94,10 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
       }
     }
 
-    if (articleId && apiKey) {
+    if (articleId) {
       fetchArticle();
     }
-  }, [articleId, apiKey]);
+  }, [articleId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,7 +130,6 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
         },
         body: JSON.stringify(payload),
       });

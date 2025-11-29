@@ -44,7 +44,8 @@ interface Stats {
 export default function AdminPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [apiKey, setApiKey] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const tabParam = searchParams?.get('tab');
   const [activeTab, setActiveTab] = useState<'overview' | 'courses' | 'articles' | 'reviews'>('overview');
@@ -62,17 +63,27 @@ export default function AdminPage() {
   }, [tabParam]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin_api_key');
-    if (saved) {
-      setApiKey(saved);
-      setIsAuthenticated(true);
-      fetchData(saved);
-    }
+    // Prüfe ob bereits eingeloggt
+    checkAuth();
   }, []);
 
-  const handleLogin = async () => {
-    if (!apiKey.trim()) {
-      setError('Bitte API Key eingeben');
+  const checkAuth = async () => {
+    try {
+      const res = await fetch('/api/admin');
+      if (res.ok) {
+        setIsAuthenticated(true);
+        await fetchData();
+      }
+    } catch (err) {
+      // Nicht eingeloggt
+    }
+  };
+
+  const handleLogin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    
+    if (!email.trim() || !password.trim()) {
+      setError('Bitte Email und Passwort eingeben');
       return;
     }
 
@@ -80,16 +91,20 @@ export default function AdminPage() {
     setError('');
 
     try {
-      const res = await fetch('/api/admin', {
-        headers: { 'x-api-key': apiKey },
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
       });
 
       if (res.ok) {
         setIsAuthenticated(true);
-        localStorage.setItem('admin_api_key', apiKey);
-        await fetchData(apiKey);
+        setEmail('');
+        setPassword('');
+        await fetchData();
       } else {
-        setError('Ungültiger API Key');
+        const data = await res.json();
+        setError(data.error || 'Ungültige Anmeldedaten');
       }
     } catch (err) {
       setError('Fehler beim Verbinden');
@@ -98,18 +113,31 @@ export default function AdminPage() {
     }
   };
 
-  const fetchData = async (key: string) => {
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/login', { method: 'DELETE' });
+    } catch (err) {
+      // Ignore errors
+    }
+    setIsAuthenticated(false);
+    setCourses([]);
+    setArticles([]);
+    setReviews([]);
+    setStats(null);
+  };
+
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin', {
-        headers: { 'x-api-key': key },
-      });
+      const res = await fetch('/api/admin');
       if (res.ok) {
         const data = await res.json();
         setCourses(data.courses || []);
         setArticles(data.articles || []);
         setReviews(data.reviews || []);
         setStats(data.stats || null);
+      } else if (res.status === 401) {
+        setIsAuthenticated(false);
       }
     } catch (err) {
       setError('Fehler beim Laden der Daten');
@@ -124,11 +152,13 @@ export default function AdminPage() {
     try {
       const res = await fetch(`/api/admin?type=${type}&id=${id}`, {
         method: 'DELETE',
-        headers: { 'x-api-key': apiKey },
       });
 
       if (res.ok) {
-        await fetchData(apiKey);
+        await fetchData();
+      } else if (res.status === 401) {
+        setIsAuthenticated(false);
+        setError('Session abgelaufen. Bitte erneut anmelden.');
       } else {
         setError('Fehler beim Löschen');
       }
@@ -139,66 +169,74 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center px-6">
+      <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white flex items-center justify-center px-6 transition-colors">
         <div className="max-w-md w-full">
           <h1 className="text-4xl font-bold mb-8 text-center" style={{ color: '#C3E41D' }}>
             Admin Login
           </h1>
-          <div className="bg-neutral-900 rounded-lg p-6 border border-neutral-800">
-            <label className="block text-sm font-medium mb-2">
-              API Key
-            </label>
-            <input
-              type="password"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-              className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white mb-4 focus:outline-none focus:border-[#C3E41D]"
-              placeholder="Dein Admin API Key"
-            />
+          <form onSubmit={handleLogin} className="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-6 border border-neutral-300 dark:border-neutral-800">
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D]"
+                placeholder="info@rita.com"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Passwort
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D]"
+                placeholder="Passwort"
+                required
+              />
+            </div>
             {error && (
-              <div className="mb-4 p-3 bg-red-900/30 text-red-400 rounded text-sm">
+              <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded text-sm">
                 {error}
               </div>
             )}
             <button
-              onClick={handleLogin}
+              type="submit"
               disabled={loading}
               className="w-full px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50"
               style={{ backgroundColor: '#C3E41D', color: '#000' }}
             >
               {loading ? 'Wird geladen...' : 'Anmelden'}
             </button>
-            <p className="text-xs text-neutral-500 mt-4 text-center">
-              Der API Key steht in deiner .env.local Datei
-            </p>
-          </div>
+          </form>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pt-24 px-6 pb-12">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white pt-24 px-6 pb-12 transition-colors">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-4xl font-bold" style={{ color: '#C3E41D' }}>
             Admin Dashboard
           </h1>
           <button
-            onClick={() => {
-              setIsAuthenticated(false);
-              localStorage.removeItem('admin_api_key');
-              setApiKey('');
-            }}
-            className="px-4 py-2 bg-neutral-800 rounded-lg hover:bg-neutral-700 transition-colors"
+            onClick={handleLogout}
+            className="px-4 py-2 bg-neutral-200 dark:bg-neutral-800 rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors text-black dark:text-white"
           >
             Abmelden
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-8 border-b border-neutral-800">
+        <div className="flex gap-2 mb-8 border-b border-neutral-300 dark:border-neutral-800">
           {(['overview', 'courses', 'articles', 'reviews'] as const).map((tab) => (
             <button
               key={tab}
@@ -209,7 +247,7 @@ export default function AdminPage() {
               className={`px-6 py-3 font-semibold transition-colors ${
                 activeTab === tab
                   ? 'border-b-2'
-                  : 'text-neutral-500 hover:text-white'
+                  : 'text-neutral-500 dark:text-neutral-500 hover:text-black dark:hover:text-white'
               }`}
               style={{
                 borderBottomColor: activeTab === tab ? '#C3E41D' : 'transparent',
@@ -225,7 +263,7 @@ export default function AdminPage() {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-900/30 text-red-400 rounded-lg">
+          <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-lg">
             {error}
           </div>
         )}
@@ -233,35 +271,35 @@ export default function AdminPage() {
         {/* Overview Tab */}
         {activeTab === 'overview' && stats && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-neutral-900 rounded-lg p-6 border border-neutral-800">
+            <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-6 border border-neutral-300 dark:border-neutral-800">
               <div className="flex items-center gap-3 mb-2">
                 <BookOpen className="w-6 h-6" style={{ color: '#C3E41D' }} />
                 <h3 className="text-lg font-semibold">Kurse</h3>
               </div>
               <p className="text-3xl font-bold">{stats.totalCourses}</p>
-              <p className="text-sm text-neutral-500 mt-1">
+              <p className="text-sm text-neutral-500 dark:text-neutral-500 mt-1">
                 {stats.publishedCourses} veröffentlicht
               </p>
             </div>
 
-            <div className="bg-neutral-900 rounded-lg p-6 border border-neutral-800">
+            <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-6 border border-neutral-300 dark:border-neutral-800">
               <div className="flex items-center gap-3 mb-2">
                 <Star className="w-6 h-6" style={{ color: '#C3E41D' }} />
                 <h3 className="text-lg font-semibold">Bewertungen</h3>
               </div>
               <p className="text-3xl font-bold">{stats.totalReviews}</p>
-              <p className="text-sm text-neutral-500 mt-1">
+              <p className="text-sm text-neutral-500 dark:text-neutral-500 mt-1">
                 ⭐ {stats.averageRating.toFixed(1)} Durchschnitt
               </p>
             </div>
 
-            <div className="bg-neutral-900 rounded-lg p-6 border border-neutral-800">
+            <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-6 border border-neutral-300 dark:border-neutral-800">
               <div className="flex items-center gap-3 mb-2">
                 <FileText className="w-6 h-6" style={{ color: '#C3E41D' }} />
                 <h3 className="text-lg font-semibold">Artikel</h3>
               </div>
               <p className="text-3xl font-bold">{stats.totalArticles}</p>
-              <p className="text-sm text-neutral-500 mt-1">
+              <p className="text-sm text-neutral-500 dark:text-neutral-500 mt-1">
                 {stats.publishedArticles} veröffentlicht
               </p>
             </div>
@@ -286,7 +324,7 @@ export default function AdminPage() {
               {courses.map((course) => (
                 <div
                   key={course._id}
-                  className="bg-neutral-900 rounded-lg p-6 border border-neutral-800"
+                  className="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-6 border border-neutral-300 dark:border-neutral-800"
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
@@ -294,20 +332,20 @@ export default function AdminPage() {
                         {course.titleDe}
                       </h3>
                       {course.titleAr && (
-                        <p className="text-neutral-400 mb-2" dir="rtl">{course.titleAr}</p>
+                        <p className="text-neutral-600 dark:text-neutral-400 mb-2" dir="rtl">{course.titleAr}</p>
                       )}
-                      <p className="text-neutral-300 text-sm mb-3 line-clamp-2">
+                      <p className="text-neutral-700 dark:text-neutral-300 text-sm mb-3 line-clamp-2">
                         {course.descriptionDe}
                       </p>
                       <div className="flex gap-2 text-xs">
-                        <span className="px-2 py-1 bg-neutral-800 rounded">
+                        <span className="px-2 py-1 bg-neutral-200 dark:bg-neutral-800 rounded text-neutral-700 dark:text-neutral-300">
                           {course.status}
                         </span>
-                        <span className="px-2 py-1 bg-neutral-800 rounded">
+                        <span className="px-2 py-1 bg-neutral-200 dark:bg-neutral-800 rounded text-neutral-700 dark:text-neutral-300">
                           {course.language}
                         </span>
                         {course.price && (
-                          <span className="px-2 py-1 bg-neutral-800 rounded">
+                          <span className="px-2 py-1 bg-neutral-200 dark:bg-neutral-800 rounded text-neutral-700 dark:text-neutral-300">
                             {course.price}€
                           </span>
                         )}
@@ -316,7 +354,7 @@ export default function AdminPage() {
                     <div className="flex gap-2 ml-4">
                       <button
                         onClick={() => handleDelete('course', course._id)}
-                        className="p-2 bg-red-900/30 text-red-400 rounded hover:bg-red-900/50 transition-colors"
+                        className="p-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -325,7 +363,7 @@ export default function AdminPage() {
                 </div>
               ))}
               {courses.length === 0 && (
-                <div className="text-center py-12 text-neutral-500">
+                <div className="text-center py-12 text-neutral-500 dark:text-neutral-500">
                   Noch keine Kurse vorhanden.
                 </div>
               )}
@@ -351,27 +389,27 @@ export default function AdminPage() {
               {articles.map((article) => (
                 <div
                   key={article._id}
-                  className="bg-neutral-900 rounded-lg p-6 border border-neutral-800"
+                  className="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-6 border border-neutral-300 dark:border-neutral-800"
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <h3 className="text-xl font-bold mb-2" style={{ color: '#C3E41D' }}>
                         {article.titleDe}
                       </h3>
-                      <span className="px-2 py-1 bg-neutral-800 rounded text-xs">
+                      <span className="px-2 py-1 bg-neutral-200 dark:bg-neutral-800 rounded text-xs text-neutral-700 dark:text-neutral-300">
                         {article.status}
                       </span>
                     </div>
                     <div className="flex gap-2 ml-4">
                       <Link
                         href={`/admin/articles/${article._id}/edit`}
-                        className="p-2 bg-neutral-800 text-neutral-300 rounded hover:bg-neutral-700 transition-colors"
+                        className="p-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
                       >
                         <Edit className="w-4 h-4" />
                       </Link>
                       <button
                         onClick={() => handleDelete('article', article._id)}
-                        className="p-2 bg-red-900/30 text-red-400 rounded hover:bg-red-900/50 transition-colors"
+                        className="p-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -380,7 +418,7 @@ export default function AdminPage() {
                 </div>
               ))}
               {articles.length === 0 && (
-                <div className="text-center py-12 text-neutral-500">
+                <div className="text-center py-12 text-neutral-500 dark:text-neutral-500">
                   Noch keine Artikel vorhanden.
                 </div>
               )}
@@ -396,7 +434,7 @@ export default function AdminPage() {
               {reviews.map((review) => (
                 <div
                   key={review._id}
-                  className="bg-neutral-900 rounded-lg p-6 border border-neutral-800"
+                  className="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-6 border border-neutral-300 dark:border-neutral-800"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center gap-2">
@@ -406,30 +444,30 @@ export default function AdminPage() {
                           className={`w-4 h-4 ${
                             star <= review.rating
                               ? 'fill-yellow-400 text-yellow-400'
-                              : 'text-neutral-600'
+                              : 'text-neutral-400 dark:text-neutral-600'
                           }`}
                         />
                       ))}
-                      <span className="ml-2 text-sm text-neutral-400">
+                      <span className="ml-2 text-sm text-neutral-600 dark:text-neutral-400">
                         {review.studentName || 'Anonym'}
                       </span>
                       {review.courseId && (
-                        <span className="text-xs text-neutral-500">
+                        <span className="text-xs text-neutral-500 dark:text-neutral-500">
                           - {review.courseId.titleDe}
                         </span>
                       )}
                     </div>
-                    <span className="text-xs text-neutral-500">
+                    <span className="text-xs text-neutral-500 dark:text-neutral-500">
                       {new Date(review.createdAt).toLocaleDateString('de-DE')}
                     </span>
                   </div>
                   {review.comment && (
-                    <p className="text-neutral-300 text-sm mt-2">{review.comment}</p>
+                    <p className="text-neutral-700 dark:text-neutral-300 text-sm mt-2">{review.comment}</p>
                   )}
                 </div>
               ))}
               {reviews.length === 0 && (
-                <div className="text-center py-12 text-neutral-500">
+                <div className="text-center py-12 text-neutral-500 dark:text-neutral-500">
                   Noch keine Bewertungen vorhanden.
                 </div>
               )}
