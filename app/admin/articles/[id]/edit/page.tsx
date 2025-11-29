@@ -6,10 +6,23 @@ import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 import RichTextEditor from '@/components/RichTextEditor';
 
-export default function NewArticlePage() {
+interface Article {
+  _id: string;
+  titleDe: string;
+  titleAr?: string;
+  contentDe: string;
+  contentAr?: string;
+  excerptDe?: string;
+  excerptAr?: string;
+  status: 'draft' | 'published';
+}
+
+export default function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
+  const [articleId, setArticleId] = useState<string>('');
   const [apiKey, setApiKey] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     titleDe: '',
@@ -22,6 +35,14 @@ export default function NewArticlePage() {
   });
 
   useEffect(() => {
+    const loadParams = async () => {
+      const resolved = await params;
+      setArticleId(resolved.id);
+    };
+    loadParams();
+  }, [params]);
+
+  useEffect(() => {
     const saved = localStorage.getItem('admin_api_key');
     if (!saved) {
       router.push('/admin');
@@ -30,22 +51,58 @@ export default function NewArticlePage() {
     setApiKey(saved);
   }, [router]);
 
+  useEffect(() => {
+    async function fetchArticle() {
+      if (!articleId || !apiKey) return;
+      
+      try {
+        const res = await fetch('/api/admin', {
+          headers: { 'x-api-key': apiKey },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const article = data.articles?.find((a: Article) => a._id === articleId);
+          if (article) {
+            setFormData({
+              titleDe: article.titleDe || '',
+              titleAr: article.titleAr || '',
+              contentDe: article.contentDe || '',
+              contentAr: article.contentAr || '',
+              excerptDe: article.excerptDe || '',
+              excerptAr: article.excerptAr || '',
+              status: article.status || 'draft',
+            });
+          }
+        }
+      } catch (err) {
+        setError('Fehler beim Laden des Artikels');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (articleId && apiKey) {
+      fetchArticle();
+    }
+  }, [articleId, apiKey]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setSaving(true);
     setError('');
 
     try {
       const res = await fetch('/api/admin', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': apiKey,
         },
         body: JSON.stringify({
           type: 'article',
+          id: articleId,
           ...formData,
-          publishedAt: formData.status === 'published' ? new Date().toISOString() : undefined,
+          publishedAt: formData.status === 'published' && !formData.publishedAt ? new Date().toISOString() : undefined,
         }),
       });
 
@@ -53,14 +110,24 @@ export default function NewArticlePage() {
         router.push('/admin?tab=articles');
       } else {
         const data = await res.json();
-        setError(data.error || 'Fehler beim Erstellen');
+        setError(data.error || 'Fehler beim Aktualisieren');
       }
     } catch (err) {
-      setError('Fehler beim Erstellen des Artikels');
+      setError('Fehler beim Aktualisieren des Artikels');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white pt-24 px-6 pb-12 transition-colors">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-neutral-500 dark:text-neutral-400">Lade Artikel...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white pt-24 px-6 pb-12 transition-colors">
@@ -74,7 +141,7 @@ export default function NewArticlePage() {
         </Link>
 
         <h1 className="text-4xl font-bold mb-8" style={{ color: '#C3E41D' }}>
-          Neuer Artikel
+          Artikel bearbeiten
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -199,16 +266,16 @@ export default function NewArticlePage() {
           <div className="flex gap-4">
             <button
               type="submit"
-              disabled={loading}
+              disabled={saving}
               className="px-6 py-3 rounded-lg font-semibold flex items-center gap-2 transition-colors disabled:opacity-50"
               style={{ backgroundColor: '#C3E41D', color: '#000' }}
             >
               <Save className="w-4 h-4" />
-              {loading ? 'Wird gespeichert...' : 'Artikel speichern'}
+              {saving ? 'Wird gespeichert...' : 'Artikel speichern'}
             </button>
             <Link
               href="/admin?tab=articles"
-              className="px-6 py-3 rounded-lg font-semibold bg-neutral-800 hover:bg-neutral-700 transition-colors"
+              className="px-6 py-3 rounded-lg font-semibold bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
             >
               Abbrechen
             </Link>

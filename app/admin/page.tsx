@@ -363,6 +363,12 @@ export default function AdminPage() {
                       </span>
                     </div>
                     <div className="flex gap-2 ml-4">
+                      <Link
+                        href={`/admin/articles/${article._id}/edit`}
+                        className="p-2 bg-neutral-800 text-neutral-300 rounded hover:bg-neutral-700 transition-colors"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Link>
                       <button
                         onClick={() => handleDelete('article', article._id)}
                         className="p-2 bg-red-900/30 text-red-400 rounded hover:bg-red-900/50 transition-colors"

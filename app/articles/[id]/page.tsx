@@ -66,14 +66,17 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
             </p>
           </header>
 
-          <div className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
-            <div className="whitespace-pre-line mb-8">
-              {article.contentDe}
-            </div>
+          <div className="article-content text-neutral-700 dark:text-neutral-300 leading-relaxed">
+            <div 
+              className="mb-8 prose prose-lg dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{ __html: article.contentDe }}
+            />
             {article.contentAr && (
-              <div className="whitespace-pre-line mt-8" dir="rtl">
-                {article.contentAr}
-              </div>
+              <div 
+                className="mt-8 prose prose-lg dark:prose-invert max-w-none" 
+                dir="rtl"
+                dangerouslySetInnerHTML={{ __html: article.contentAr }}
+              />
             )}
           </div>
         </article>
