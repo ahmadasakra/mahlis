@@ -56,23 +56,10 @@ export default function ContactPage() {
                 <div>
                   <p className="text-sm text-neutral-500 dark:text-neutral-400">E-Mail</p>
                   <a 
-                    href="mailto:contact@ritamahlis.com" 
+                    href="mailto:ritamahlis22@gmail.com" 
                     className="text-black dark:text-white hover:text-[#C3E41D] transition-colors"
                   >
-                    contact@ritamahlis.com
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <Phone className="w-5 h-5 mt-1 text-[#C3E41D]" />
-                <div>
-                  <p className="text-sm text-neutral-500 dark:text-neutral-400">Telefon</p>
-                  <a 
-                    href="tel:+491234567890" 
-                    className="text-black dark:text-white hover:text-[#C3E41D] transition-colors"
-                  >
-                    +49 123 456 7890
+                    ritamahlis22@gmail.com
                   </a>
                 </div>
               </div>

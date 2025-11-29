@@ -1,0 +1,61 @@
+{
+  "name": "Rita Mahlis Website",
+  "description": "Journalismus & Online-Unterricht Website",
+  "repository": "https://github.com/yourusername/rita",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["nextjs", "node", "mongodb"],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "required": true,
+      "value": "production"
+    },
+    "MONGODB_URI": {
+      "required": true,
+      "description": "MongoDB connection string"
+    },
+    "ADMIN_EMAIL": {
+      "required": true,
+      "description": "Admin login email"
+    },
+    "ADMIN_PASSWORD_B64": {
+      "required": true,
+      "description": "Base64 encoded bcrypt password hash"
+    },
+    "JWT_SECRET": {
+      "required": true,
+      "description": "JWT secret for authentication (change from default!)"
+    },
+    "AWS_REGION": {
+      "required": true,
+      "description": "AWS S3 region"
+    },
+    "AWS_ACCESS_KEY_ID": {
+      "required": true,
+      "description": "AWS access key ID"
+    },
+    "AWS_SECRET_ACCESS_KEY": {
+      "required": true,
+      "description": "AWS secret access key"
+    },
+    "AWS_S3_BUCKET_NAME": {
+      "required": true,
+      "description": "AWS S3 bucket name"
+    },
+    "NEXT_PUBLIC_BASE_URL": {
+      "required": false,
+      "description": "Public base URL (will be set automatically by Heroku)"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  }
+}
+
