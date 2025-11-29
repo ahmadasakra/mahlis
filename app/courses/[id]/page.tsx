@@ -22,8 +22,8 @@ interface Course {
 
 async function getCourse(id: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/courses/${id}`, { 
+    // In Server Components: relative URLs verwenden (funktioniert auf demselben Server)
+    const res = await fetch(`/api/courses/${id}`, { 
       cache: 'no-store',
     });
     if (!res.ok) return null;

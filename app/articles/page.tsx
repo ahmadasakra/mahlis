@@ -15,8 +15,8 @@ interface Article {
 
 async function getArticles() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/articles?limit=20`, {
+    // In Server Components: relative URLs verwenden (funktioniert auf demselben Server)
+    const res = await fetch('/api/articles?limit=20', {
       cache: 'no-store',
     });
     if (!res.ok) return [];
