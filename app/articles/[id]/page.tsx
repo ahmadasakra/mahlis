@@ -9,6 +9,7 @@ interface Article {
   contentAr?: string;
   excerptDe?: string;
   excerptAr?: string;
+  featuredImage?: string;
   publishedAt?: string;
   createdAt: string;
 }
@@ -55,7 +56,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                 {article.titleAr}
               </h2>
             )}
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+            <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-6">
               {article.publishedAt
                 ? new Date(article.publishedAt).toLocaleDateString('de-DE', {
                     year: 'numeric',
@@ -64,6 +65,15 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                   })
                 : new Date(article.createdAt).toLocaleDateString('de-DE')}
             </p>
+            {article.featuredImage && (
+              <div className="w-full mb-8 rounded-lg overflow-hidden">
+                <img
+                  src={article.featuredImage}
+                  alt={article.titleDe}
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+            )}
           </header>
 
           <div className="article-content text-neutral-700 dark:text-neutral-300 leading-relaxed">

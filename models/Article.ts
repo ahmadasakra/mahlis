@@ -7,6 +7,7 @@ export interface IArticle extends Document {
   contentAr?: string;
   excerptDe?: string;
   excerptAr?: string;
+  featuredImage?: string;
   status: 'draft' | 'published';
   publishedAt?: Date;
   createdAt: Date;
@@ -21,6 +22,7 @@ const ArticleSchema: Schema = new Schema(
     contentAr: String,
     excerptDe: String,
     excerptAr: String,
+    featuredImage: String,
     status: { type: String, enum: ['draft', 'published'], default: 'draft' },
     publishedAt: Date,
   },

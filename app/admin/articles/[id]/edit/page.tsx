@@ -14,6 +14,7 @@ interface Article {
   contentAr?: string;
   excerptDe?: string;
   excerptAr?: string;
+  featuredImage?: string;
   status: 'draft' | 'published';
 }
 
@@ -31,6 +32,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
     contentAr: '',
     excerptDe: '',
     excerptAr: '',
+    featuredImage: '',
     status: 'draft' as 'draft' | 'published',
   });
 
@@ -70,6 +72,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
               contentAr: article.contentAr || '',
               excerptDe: article.excerptDe || '',
               excerptAr: article.excerptAr || '',
+              featuredImage: article.featuredImage || '',
               status: article.status || 'draft',
             });
           }
@@ -219,6 +222,33 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
               placeholder="ملخص قصير للمقال"
               dir="rtl"
             />
+          </div>
+
+          {/* Featured Image */}
+          <div>
+            <label htmlFor="featuredImage" className="block text-sm font-medium mb-2">
+              Featured Image (URL)
+            </label>
+            <input
+              id="featuredImage"
+              type="url"
+              value={formData.featuredImage}
+              onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
+              className="w-full px-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D]"
+              placeholder="https://example.com/image.jpg"
+            />
+            {formData.featuredImage && (
+              <div className="mt-3">
+                <img
+                  src={formData.featuredImage}
+                  alt="Preview"
+                  className="w-full max-w-md h-auto rounded-lg border border-neutral-300 dark:border-neutral-700"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           {/* Content DE */}

@@ -6,6 +6,7 @@ interface Article {
   titleAr?: string;
   excerptDe?: string;
   excerptAr?: string;
+  featuredImage?: string;
   publishedAt?: string;
   createdAt: string;
 }
@@ -43,45 +44,56 @@ export default async function ArticlesSection() {
             <Link
               key={article._id}
               href={`/articles/${article._id}`}
-              className="block bg-neutral-100 dark:bg-neutral-900 rounded-lg p-6 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors border border-neutral-300 dark:border-neutral-800"
+              className="block bg-neutral-100 dark:bg-neutral-900 rounded-lg overflow-hidden hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors border border-neutral-300 dark:border-neutral-800"
             >
-              <h3 className="text-xl font-bold mb-2 hover:underline" style={{ color: '#C3E41D' }}>
-                {article.titleDe}
-              </h3>
-              {article.titleAr && (
-                <h4 className="text-lg mb-3 text-neutral-600 dark:text-neutral-400" dir="rtl">
-                  {article.titleAr}
-                </h4>
-              )}
-              
-              {(article.excerptDe || article.excerptAr) && (
-                <div className="mb-4">
-                  {article.excerptDe && (
-                    <p className="text-neutral-700 dark:text-neutral-300 text-sm mb-2 line-clamp-3">
-                      {article.excerptDe}
-                    </p>
-                  )}
-                  {article.excerptAr && (
-                    <p className="text-neutral-700 dark:text-neutral-300 text-sm line-clamp-3" dir="rtl">
-                      {article.excerptAr}
-                    </p>
-                  )}
+              {article.featuredImage && (
+                <div className="w-full h-48 overflow-hidden">
+                  <img
+                    src={article.featuredImage}
+                    alt={article.titleDe}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
               )}
-              
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-neutral-300 dark:border-neutral-800">
-                <span className="text-xs text-neutral-500 dark:text-neutral-400">
-                  {article.publishedAt
-                    ? new Date(article.publishedAt).toLocaleDateString('de-DE', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })
-                    : new Date(article.createdAt).toLocaleDateString('de-DE')}
-                </span>
-                <span className="text-sm text-[#C3E41D] hover:underline">
-                  Weiterlesen →
-                </span>
+              <div className="p-6">
+                <h3 className="text-xl font-bold mb-2 hover:underline" style={{ color: '#C3E41D' }}>
+                  {article.titleDe}
+                </h3>
+                {article.titleAr && (
+                  <h4 className="text-lg mb-3 text-neutral-600 dark:text-neutral-400" dir="rtl">
+                    {article.titleAr}
+                  </h4>
+                )}
+                
+                {(article.excerptDe || article.excerptAr) && (
+                  <div className="mb-4">
+                    {article.excerptDe && (
+                      <p className="text-neutral-700 dark:text-neutral-300 text-sm mb-2 line-clamp-3">
+                        {article.excerptDe}
+                      </p>
+                    )}
+                    {article.excerptAr && (
+                      <p className="text-neutral-700 dark:text-neutral-300 text-sm line-clamp-3" dir="rtl">
+                        {article.excerptAr}
+                      </p>
+                    )}
+                  </div>
+                )}
+                
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-neutral-300 dark:border-neutral-800">
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                    {article.publishedAt
+                      ? new Date(article.publishedAt).toLocaleDateString('de-DE', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })
+                      : new Date(article.createdAt).toLocaleDateString('de-DE')}
+                  </span>
+                  <span className="text-sm text-[#C3E41D] hover:underline">
+                    Weiterlesen →
+                  </span>
+                </div>
               </div>
             </Link>
           ))}
