@@ -116,7 +116,8 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
       if (formData.excerptAr?.trim()) payload.excerptAr = formData.excerptAr.trim();
       if (formData.featuredImage?.trim()) payload.featuredImage = formData.featuredImage.trim();
       
-      if (formData.status === 'published' && !formData.publishedAt) {
+      // Wenn Artikel auf "published" gesetzt wird, setze publishedAt
+      if (formData.status === 'published') {
         payload.publishedAt = new Date().toISOString();
       }
       console.log('Updating article with payload:', payload); // Debug
