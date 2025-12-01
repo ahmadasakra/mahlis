@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { getBaseUrl } from '@/lib/utils';
 
 interface Article {
   _id: string;
@@ -16,8 +17,8 @@ interface Article {
 
 async function getArticle(id: string) {
   try {
-    // In Server Components: relative URLs verwenden (funktioniert auf demselben Server)
-    const res = await fetch(`/api/articles/${id}`, { 
+    const baseUrl = await getBaseUrl();
+    const res = await fetch(`${baseUrl}/api/articles/${id}`, { 
       cache: 'no-store',
     });
     if (!res.ok) return null;

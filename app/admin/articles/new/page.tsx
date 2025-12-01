@@ -43,17 +43,32 @@ export default function NewArticlePage() {
     setLoading(true);
     setError('');
 
+    // Validate required fields
+    if (!formData.titleDe.trim()) {
+      setError('Titel (Deutsch) ist erforderlich');
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.contentDe.trim() || formData.contentDe.trim() === '<p></p>') {
+      setError('Inhalt (Deutsch) ist erforderlich');
+      setLoading(false);
+      return;
+    }
+
     try {
       const payload: any = {
         type: 'article',
-        titleDe: formData.titleDe,
-        contentDe: formData.contentDe,
+        titleDe: formData.titleDe.trim(),
+        contentDe: formData.contentDe.trim(),
         status: formData.status,
       };
       
       // Füge optionale Felder nur hinzu, wenn sie einen Wert haben
       if (formData.titleAr?.trim()) payload.titleAr = formData.titleAr.trim();
-      if (formData.contentAr?.trim()) payload.contentAr = formData.contentAr.trim();
+      if (formData.contentAr?.trim() && formData.contentAr.trim() !== '<p></p>') {
+        payload.contentAr = formData.contentAr.trim();
+      }
       if (formData.excerptDe?.trim()) payload.excerptDe = formData.excerptDe.trim();
       if (formData.excerptAr?.trim()) payload.excerptAr = formData.excerptAr.trim();
       if (formData.featuredImage?.trim()) payload.featuredImage = formData.featuredImage.trim();

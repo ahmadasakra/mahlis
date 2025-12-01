@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Star } from 'lucide-react';
+import { getBaseUrl } from '@/lib/utils';
 
 interface Course {
   _id: string;
@@ -17,8 +18,8 @@ interface Course {
 
 async function getCourses() {
   try {
-    // In Server Components: relative URLs verwenden (funktioniert auf demselben Server)
-    const res = await fetch('/api/courses', {
+    const baseUrl = await getBaseUrl();
+    const res = await fetch(`${baseUrl}/api/courses`, {
       cache: 'no-store',
     });
     if (!res.ok) return [];
