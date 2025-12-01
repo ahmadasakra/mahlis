@@ -102,7 +102,7 @@ export default function PortfolioHero() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
               <div className="w-[65px] h-[110px] sm:w-[90px] sm:h-[152px] md:w-[110px] md:h-[185px] lg:w-[129px] lg:h-[218px] rounded-full overflow-hidden shadow-2xl transition-transform duration-300 hover:scale-110 cursor-pointer">
                 <img
-                  src="https://i.ibb.co/KctDKL1h/1736714395127.jpg"
+                  src="https://i.ibb.co/pjR5D77Q/d680ab3e-e6aa-43fa-97c3-e111f002ae05.jpg"
                   alt="Rita Mahlis"
                   className="w-full h-full object-cover"
                 />
