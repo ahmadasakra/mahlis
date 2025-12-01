@@ -520,33 +520,50 @@ export default function AdminPage() {
                   className="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-6 border border-neutral-300 dark:border-neutral-800"
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <div className="flex items-center gap-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          className={`w-4 h-4 ${
-                            star <= review.rating
-                              ? 'fill-yellow-400 text-yellow-400'
-                              : 'text-neutral-400 dark:text-neutral-600'
-                          }`}
-                        />
-                      ))}
-                      <span className="ml-2 text-sm text-neutral-600 dark:text-neutral-400">
-                        {review.studentName || 'Anonym'}
-                      </span>
-                      {review.courseId && (
-                        <span className="text-xs text-neutral-500 dark:text-neutral-500">
-                          - {review.courseId.titleDe}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-4 h-4 ${
+                              star <= review.rating
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'text-neutral-400 dark:text-neutral-600'
+                            }`}
+                          />
+                        ))}
+                        <span className="ml-2 text-sm text-neutral-600 dark:text-neutral-400">
+                          {review.studentName || 'Anonym'}
                         </span>
+                        {review.courseId && (
+                          <span className="text-xs text-neutral-500 dark:text-neutral-500">
+                            - {review.courseId.titleDe}
+                          </span>
+                        )}
+                      </div>
+                      {review.comment && (
+                        <p className="text-neutral-700 dark:text-neutral-300 text-sm mt-2">{review.comment}</p>
                       )}
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
+                        {new Date(review.createdAt).toLocaleDateString('de-DE', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </p>
                     </div>
-                    <span className="text-xs text-neutral-500 dark:text-neutral-500">
-                      {new Date(review.createdAt).toLocaleDateString('de-DE')}
-                    </span>
+                    <div className="flex gap-2 ml-4">
+                      <button
+                        onClick={() => handleDelete('review', review._id)}
+                        className="p-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
+                        title="Bewertung löschen"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                  {review.comment && (
-                    <p className="text-neutral-700 dark:text-neutral-300 text-sm mt-2">{review.comment}</p>
-                  )}
                 </div>
               ))}
               {reviews.length === 0 && (
