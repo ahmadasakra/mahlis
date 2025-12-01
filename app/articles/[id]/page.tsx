@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getBaseUrl } from '@/lib/utils';
+import SocialMediaShare from '@/components/SocialMediaShare';
+import ArticleClient from './ArticleClient';
 
 interface Article {
   _id: string;
@@ -36,6 +38,11 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
   if (!article) {
     notFound();
   }
+
+  // Konstruiere die vollständige URL für Sharing
+  const baseUrl = await getBaseUrl();
+  const articleUrl = `${baseUrl}/articles/${id}`;
+  const shareDescription = article.excerptDe || article.excerptAr || '';
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white pt-24 px-6 pb-12 transition-colors">
@@ -91,6 +98,16 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
             )}
           </div>
         </article>
+
+        {/* Social Media Sharing */}
+        <SocialMediaShare 
+          url={articleUrl}
+          title={article.titleDe}
+          description={shareDescription}
+        />
+
+        {/* Kommentare */}
+        <ArticleClient articleId={id} />
       </div>
     </div>
   );

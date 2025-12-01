@@ -3,6 +3,7 @@ import connectDB from '@/lib/mongodb';
 import Course from '@/models/Course';
 import Review from '@/models/Review';
 import Article from '@/models/Article';
+import Comment from '@/models/Comment';
 import { isAuthorized } from '@/lib/auth';
 
 // Auth wird jetzt über JWT Token in Cookies gehandhabt
@@ -19,6 +20,7 @@ export async function GET(request: NextRequest) {
     const courses = await Course.find().sort({ createdAt: -1 });
     const reviews = await Review.find().populate('courseId').sort({ createdAt: -1 });
     const articles = await Article.find().sort({ createdAt: -1 });
+    const comments = await Comment.find().populate('articleId', 'titleDe').sort({ createdAt: -1 });
     
     // Statistiken
     const stats = {
@@ -30,9 +32,11 @@ export async function GET(request: NextRequest) {
         : 0,
       totalArticles: articles.length,
       publishedArticles: articles.filter(a => a.status === 'published').length,
+      totalComments: comments.length,
+      pendingComments: comments.filter(c => !c.isApproved).length,
     };
     
-    return NextResponse.json({ courses, reviews, articles, stats });
+    return NextResponse.json({ courses, reviews, articles, comments, stats });
   } catch (error) {
     console.error('Error fetching data:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -132,6 +136,8 @@ export async function DELETE(request: NextRequest) {
         break;
       case 'article':
         result = await Article.findByIdAndDelete(id);
+        // Lösche auch alle zugehörigen Kommentare
+        await Comment.deleteMany({ articleId: id });
         break;
       case 'review':
         result = await Review.findByIdAndDelete(id);
