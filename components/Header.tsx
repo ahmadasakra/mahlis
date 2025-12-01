@@ -12,11 +12,6 @@ export default function Header() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
 
-  // Header nicht auf Admin-Seiten anzeigen
-  if (pathname?.startsWith('/admin')) {
-    return null;
-  }
-
   useEffect(() => {
     // Prüfe ob dark mode bereits gesetzt ist
     const isDarkMode = document.documentElement.classList.contains('dark');
@@ -39,6 +34,12 @@ export default function Header() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMenuOpen]);
+
+  // Header nicht auf Admin-Seiten anzeigen
+  // WICHTIG: Dieser Check muss NACH allen Hooks kommen!
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   const toggleTheme = () => {
     const newTheme = !isDark;
