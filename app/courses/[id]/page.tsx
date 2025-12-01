@@ -2,7 +2,7 @@ import { Star } from 'lucide-react';
 import ReviewForm from '@/components/ReviewForm';
 import ReviewsList from '@/components/ReviewsList';
 import Link from 'next/link';
-import { getBaseUrl } from '@/lib/utils';
+import { getBaseUrl } from '@/lib/server-utils';
 
 interface Course {
   _id: string;

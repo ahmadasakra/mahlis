@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getBaseUrl } from '@/lib/utils';
+import { getBaseUrl } from '@/lib/server-utils';
 
 interface Article {
   _id: string;

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getBaseUrl } from '@/lib/utils';
+import { getBaseUrl } from '@/lib/server-utils';
 import SocialMediaShare from '@/components/SocialMediaShare';
 import ArticleClient from './ArticleClient';
 

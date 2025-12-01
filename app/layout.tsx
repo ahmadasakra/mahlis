@@ -4,6 +4,7 @@ import "./globals.css";
 import { LocaleProvider } from "@/lib/locale";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BeamsBackgroundWrapper from "@/components/BeamsBackgroundWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,11 +35,14 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
       >
+        <BeamsBackgroundWrapper />
         <LocaleProvider>
           <Header />
-          {children}
+          <div className="relative z-10">
+            {children}
+          </div>
           <Footer />
         </LocaleProvider>
       </body>
