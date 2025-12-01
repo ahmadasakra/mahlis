@@ -123,7 +123,9 @@ export const TestimonialStack = ({ testimonials, visibleBehind = 2 }: Testimonia
 
         return (
           <div
-            ref={el => cardRefs.current[index] = el}
+            ref={(el) => {
+              cardRefs.current[index] = el;
+            }}
             key={testimonial.id}
             className={cn(
               "testimonial-card absolute top-0 left-0 w-full rounded-2xl border border-neutral-200/50 dark:border-neutral-800/50",
