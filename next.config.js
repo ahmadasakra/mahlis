@@ -1,5 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Erlaube externe Bilder von ibb.co
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'i.ibb.co',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
   // Erlaube alle Hosts für Heroku (wichtig für Custom Domains)
   // Heroku setzt den Host-Header automatisch basierend auf der Domain
   async headers() {
