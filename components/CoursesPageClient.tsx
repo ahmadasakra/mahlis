@@ -1,0 +1,84 @@
+'use client';
+
+import Link from 'next/link';
+import { Star } from 'lucide-react';
+import { useLocale } from '@/lib/locale';
+
+interface Course {
+  _id: string;
+  titleDe: string;
+  titleAr?: string;
+  descriptionDe: string;
+  descriptionAr?: string;
+  language: 'de' | 'ar' | 'both';
+  price?: number;
+  startDate?: string;
+  endDate?: string;
+  reviewCount: number;
+  averageRating: number;
+}
+
+interface CoursesPageClientProps {
+  courses: Course[];
+}
+
+export default function CoursesPageClient({ courses }: CoursesPageClientProps) {
+  const { t, dir, locale } = useLocale();
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white pt-24 px-6 pb-12 transition-colors" dir={dir}>
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-4xl md:text-5xl font-bold mb-12 text-center" style={{ color: '#C3E41D' }}>
+          {t('courses.title')}
+        </h1>
+
+        {courses.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-neutral-500 dark:text-neutral-400 text-lg">{t('courses.noCourses')}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {courses.map((course) => (
+              <Link
+                key={course._id}
+                href={`/courses/${course._id}`}
+                className="block bg-neutral-100 dark:bg-neutral-900 rounded-lg p-6 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors border border-neutral-300 dark:border-neutral-800"
+              >
+                <h2 className="text-xl font-bold mb-2" style={{ color: '#C3E41D' }}>
+                  {locale === 'ar' && course.titleAr ? course.titleAr : course.titleDe}
+                </h2>
+                {locale === 'de' && course.titleAr && (
+                  <h3 className="text-lg mb-3 text-neutral-600 dark:text-neutral-400" dir="rtl">{course.titleAr}</h3>
+                )}
+                {locale === 'ar' && course.titleDe && (
+                  <h3 className="text-lg mb-3 text-neutral-600 dark:text-neutral-400" dir="ltr">{course.titleDe}</h3>
+                )}
+                <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-4 line-clamp-3" dir={locale === 'ar' && course.descriptionAr ? 'rtl' : 'ltr'}>
+                  {locale === 'ar' && course.descriptionAr ? course.descriptionAr : course.descriptionDe}
+                </p>
+                
+                <div className={`flex items-center justify-between mt-4 pt-4 border-t border-neutral-300 dark:border-neutral-800 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
+                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    <span className="text-sm">
+                      {course.averageRating > 0 ? course.averageRating.toFixed(1) : t('courses.new')}
+                    </span>
+                    {course.reviewCount > 0 && (
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400" style={{ [dir === 'rtl' ? 'marginRight' : 'marginLeft']: '0.25rem' }}>
+                        ({course.reviewCount})
+                      </span>
+                    )}
+                  </div>
+                  {course.price && (
+                    <span className="text-sm font-semibold">{course.price}{t('courses.price')}</span>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+

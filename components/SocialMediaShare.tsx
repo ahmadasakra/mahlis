@@ -2,6 +2,7 @@
 
 import { Facebook, Twitter, Linkedin, Mail, Copy, Check } from 'lucide-react';
 import { useState } from 'react';
+import { useLocale } from '@/lib/locale';
 
 interface SocialMediaShareProps {
   url: string;
@@ -10,6 +11,7 @@ interface SocialMediaShareProps {
 }
 
 export default function SocialMediaShare({ url, title, description }: SocialMediaShareProps) {
+  const { t, dir } = useLocale();
   const [copied, setCopied] = useState(false);
 
   const shareUrl = encodeURIComponent(url);
@@ -34,11 +36,11 @@ export default function SocialMediaShare({ url, title, description }: SocialMedi
   };
 
   return (
-    <div className="mt-8 pt-8 border-t border-neutral-300 dark:border-neutral-800">
+    <div className="mt-8 pt-8 border-t border-neutral-300 dark:border-neutral-800" dir={dir}>
       <h3 className="text-xl font-semibold mb-4" style={{ color: '#C3E41D' }}>
-        Artikel teilen
+        {t('articles.share')}
       </h3>
-      <div className="flex flex-wrap gap-3 items-center">
+      <div className={`flex flex-wrap gap-3 items-center ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
         <a
           href={shareLinks.facebook}
           target="_blank"
@@ -47,7 +49,7 @@ export default function SocialMediaShare({ url, title, description }: SocialMedi
           aria-label="Auf Facebook teilen"
         >
           <Facebook className="w-4 h-4" />
-          <span className="text-sm">Facebook</span>
+          <span className="text-sm">{t('social.facebook')}</span>
         </a>
 
         <a
@@ -55,10 +57,10 @@ export default function SocialMediaShare({ url, title, description }: SocialMedi
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 px-4 py-2 bg-[#1DA1F2] text-white rounded-lg hover:bg-[#1A91DA] transition-colors"
-          aria-label="Auf Twitter teilen"
+          aria-label={t('social.twitter')}
         >
           <Twitter className="w-4 h-4" />
-          <span className="text-sm">Twitter</span>
+          <span className="text-sm">{t('social.twitter')}</span>
         </a>
 
         <a
@@ -66,35 +68,35 @@ export default function SocialMediaShare({ url, title, description }: SocialMedi
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 px-4 py-2 bg-[#0077B5] text-white rounded-lg hover:bg-[#006399] transition-colors"
-          aria-label="Auf LinkedIn teilen"
+          aria-label={t('social.linkedin')}
         >
           <Linkedin className="w-4 h-4" />
-          <span className="text-sm">LinkedIn</span>
+          <span className="text-sm">{t('social.linkedin')}</span>
         </a>
 
         <a
           href={shareLinks.email}
           className="flex items-center gap-2 px-4 py-2 bg-neutral-700 dark:bg-neutral-600 text-white rounded-lg hover:bg-neutral-600 dark:hover:bg-neutral-500 transition-colors"
-          aria-label="Per E-Mail teilen"
+          aria-label={t('social.email')}
         >
           <Mail className="w-4 h-4" />
-          <span className="text-sm">E-Mail</span>
+          <span className="text-sm">{t('social.email')}</span>
         </a>
 
         <button
           onClick={handleCopyLink}
           className="flex items-center gap-2 px-4 py-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
-          aria-label="Link kopieren"
+          aria-label={t('social.copyLink')}
         >
           {copied ? (
             <>
               <Check className="w-4 h-4" />
-              <span className="text-sm">Kopiert!</span>
+              <span className="text-sm">{t('social.copied')}</span>
             </>
           ) : (
             <>
               <Copy className="w-4 h-4" />
-              <span className="text-sm">Link kopieren</span>
+              <span className="text-sm">{t('social.copyLink')}</span>
             </>
           )}
         </button>

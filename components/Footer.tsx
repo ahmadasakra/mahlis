@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useLocale } from '@/lib/locale';
 
 export default function Footer() {
   const pathname = usePathname();
+  const { t, dir } = useLocale();
 
   // Footer nicht auf Admin-Seiten anzeigen
   if (pathname?.startsWith('/admin')) {
@@ -14,7 +16,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white dark:bg-black border-t border-neutral-300 dark:border-neutral-800 transition-colors">
+    <footer className="bg-white dark:bg-black border-t border-neutral-300 dark:border-neutral-800 transition-colors" dir={dir}>
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo/Signature */}
@@ -29,7 +31,7 @@ export default function Footer() {
               R
             </div>
             <span className="text-sm text-neutral-600 dark:text-neutral-400">
-              Rita Mahlis
+              {t('author.nameShort')}
             </span>
           </div>
 
@@ -43,7 +45,7 @@ export default function Footer() {
                   : 'text-neutral-600 dark:text-neutral-400 hover:text-[#C3E41D]'
               }`}
             >
-              Home
+              {t('nav.home')}
             </Link>
             <Link
               href="/courses"
@@ -53,7 +55,7 @@ export default function Footer() {
                   : 'text-neutral-600 dark:text-neutral-400 hover:text-[#C3E41D]'
               }`}
             >
-              Kurse
+              {t('nav.courses')}
             </Link>
             <Link
               href="/articles"
@@ -63,7 +65,7 @@ export default function Footer() {
                   : 'text-neutral-600 dark:text-neutral-400 hover:text-[#C3E41D]'
               }`}
             >
-              Artikel
+              {t('nav.articles')}
             </Link>
             <Link
               href="/reviews"
@@ -73,7 +75,7 @@ export default function Footer() {
                   : 'text-neutral-600 dark:text-neutral-400 hover:text-[#C3E41D]'
               }`}
             >
-              Bewertungen
+              {t('nav.reviews')}
             </Link>
             <Link
               href="/contact"
@@ -83,13 +85,13 @@ export default function Footer() {
                   : 'text-neutral-600 dark:text-neutral-400 hover:text-[#C3E41D]'
               }`}
             >
-              Kontakt
+              {t('nav.contact')}
             </Link>
           </nav>
 
           {/* Copyright */}
           <div className="text-xs text-neutral-500 dark:text-neutral-400">
-            © {currentYear} Rita Mahlis
+            {t('footer.copyright', { year: currentYear })}
           </div>
         </div>
       </div>

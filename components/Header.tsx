@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
+import { useLocale } from '@/lib/locale';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Header() {
   // Initialisiere mit dem tatsächlichen Dark-Mode-Status
@@ -17,6 +19,7 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
+  const { t, dir } = useLocale();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -52,15 +55,15 @@ export default function Header() {
   };
 
   const menuItems = [
-    { label: "HOME", href: "/", highlight: pathname === "/" },
-    { label: "KURSE", href: "/courses", highlight: pathname?.startsWith("/courses") },
-    { label: "ARTIKEL", href: "/articles", highlight: pathname?.startsWith("/articles") },
-    { label: "BEWERTUNGEN", href: "/reviews", highlight: pathname === "/reviews" },
-    { label: "KONTAKT", href: "/contact", highlight: pathname === "/contact" },
+    { label: t('nav.home'), href: "/", highlight: pathname === "/" },
+    { label: t('nav.courses'), href: "/courses", highlight: pathname?.startsWith("/courses") },
+    { label: t('nav.articles'), href: "/articles", highlight: pathname?.startsWith("/articles") },
+    { label: t('nav.reviews'), href: "/reviews", highlight: pathname === "/reviews" },
+    { label: t('nav.contact'), href: "/contact", highlight: pathname === "/contact" },
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 bg-white/95 dark:bg-black/95 backdrop-blur-md border-b border-neutral-200/50 dark:border-neutral-800/50">
+    <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 bg-white/95 dark:bg-black/95 backdrop-blur-md border-b border-neutral-200/50 dark:border-neutral-800/50" dir={dir}>
       <nav className="flex items-center justify-between max-w-screen-2xl mx-auto">
         {/* Menu Button */}
         <div className="relative">
@@ -121,22 +124,25 @@ export default function Header() {
           </div>
         </Link>
 
-        {/* Theme Toggle */}
-        <button
-          type="button"
-          onClick={toggleTheme}
-          className="relative w-16 h-8 rounded-full hover:opacity-80 transition-opacity"
-          style={{ backgroundColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)" }}
-          aria-label="Toggle theme"
-        >
-          <div
-            className="absolute top-1 left-1 w-6 h-6 rounded-full transition-transform duration-300"
-            style={{
-              backgroundColor: isDark ? "hsl(0 0% 100%)" : "hsl(0 0% 10%)",
-              transform: isDark ? "translateX(2rem)" : "translateX(0)",
-            }}
-          />
-        </button>
+        {/* Language Switcher & Theme Toggle */}
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="relative w-16 h-8 rounded-full hover:opacity-80 transition-opacity"
+            style={{ backgroundColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)" }}
+            aria-label="Toggle theme"
+          >
+            <div
+              className="absolute top-1 left-1 w-6 h-6 rounded-full transition-transform duration-300"
+              style={{
+                backgroundColor: isDark ? "hsl(0 0% 100%)" : "hsl(0 0% 10%)",
+                transform: isDark ? "translateX(2rem)" : "translateX(0)",
+              }}
+            />
+          </button>
+        </div>
       </nav>
     </header>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocale } from '@/lib/locale';
 
 interface CommentFormProps {
   articleId: string;
@@ -8,6 +9,7 @@ interface CommentFormProps {
 }
 
 export default function CommentForm({ articleId, onCommentAdded }: CommentFormProps) {
+  const { t, dir } = useLocale();
   const [formData, setFormData] = useState({
     authorName: '',
     authorEmail: '',
@@ -46,24 +48,24 @@ export default function CommentForm({ articleId, onCommentAdded }: CommentFormPr
         }
       } else {
         const data = await res.json();
-        setError(data.error || 'Fehler beim Speichern des Kommentars');
+        setError(data.error || t('articles.commentError'));
       }
     } catch (err) {
-      setError('Fehler beim Senden des Kommentars');
+      setError(t('articles.commentError'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="mt-8 p-6 bg-neutral-100 dark:bg-neutral-900 rounded-lg border border-neutral-300 dark:border-neutral-800">
+    <div className="mt-8 p-6 bg-neutral-100 dark:bg-neutral-900 rounded-lg border border-neutral-300 dark:border-neutral-800" dir={dir}>
       <h3 className="text-2xl font-bold mb-4" style={{ color: '#C3E41D' }}>
-        Kommentar schreiben
+        {t('articles.writeComment')}
       </h3>
 
       {success && (
         <div className="mb-4 p-4 bg-green-900/30 text-green-400 rounded-lg border border-green-800">
-          Vielen Dank! Ihr Kommentar wurde gesendet und wartet auf Freigabe.
+          {t('articles.commentSuccess')}
         </div>
       )}
 
@@ -77,7 +79,7 @@ export default function CommentForm({ articleId, onCommentAdded }: CommentFormPr
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label htmlFor="authorName" className="block text-sm font-medium mb-2">
-              Name *
+              {t('articles.commentName')} *
             </label>
             <input
               id="authorName"
@@ -86,12 +88,13 @@ export default function CommentForm({ articleId, onCommentAdded }: CommentFormPr
               value={formData.authorName}
               onChange={(e) => setFormData({ ...formData, authorName: e.target.value })}
               className="w-full px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white focus:outline-none focus:border-[#C3E41D]"
-              placeholder="Ihr Name"
+              placeholder={t('articles.commentName')}
+              dir={dir}
             />
           </div>
           <div>
             <label htmlFor="authorEmail" className="block text-sm font-medium mb-2">
-              E-Mail (optional)
+              {t('articles.commentEmail')}
             </label>
             <input
               id="authorEmail"
@@ -99,14 +102,15 @@ export default function CommentForm({ articleId, onCommentAdded }: CommentFormPr
               value={formData.authorEmail}
               onChange={(e) => setFormData({ ...formData, authorEmail: e.target.value })}
               className="w-full px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white focus:outline-none focus:border-[#C3E41D]"
-              placeholder="ihre@email.com"
+              placeholder={t('articles.commentEmail')}
+              dir="ltr"
             />
           </div>
         </div>
 
         <div>
           <label htmlFor="content" className="block text-sm font-medium mb-2">
-            Kommentar *
+            {t('articles.commentContent')} *
           </label>
           <textarea
             id="content"
@@ -115,7 +119,8 @@ export default function CommentForm({ articleId, onCommentAdded }: CommentFormPr
             value={formData.content}
             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
             className="w-full px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white focus:outline-none focus:border-[#C3E41D] resize-none"
-            placeholder="Schreiben Sie Ihren Kommentar..."
+            placeholder={t('articles.commentContent')}
+            dir={dir}
           />
         </div>
 
@@ -125,11 +130,11 @@ export default function CommentForm({ articleId, onCommentAdded }: CommentFormPr
           className="px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50"
           style={{ backgroundColor: '#C3E41D', color: '#000' }}
         >
-          {loading ? 'Wird gesendet...' : 'Kommentar absenden'}
+          {loading ? t('articles.commentSending') : t('articles.commentSubmit')}
         </button>
 
         <p className="text-xs text-neutral-500 dark:text-neutral-400">
-          * Kommentare werden vor der Veröffentlichung moderiert.
+          * {t('articles.commentModerated')}
         </p>
       </form>
     </div>

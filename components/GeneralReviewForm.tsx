@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { Star } from 'lucide-react';
+import { useLocale } from '@/lib/locale';
 
 export default function GeneralReviewForm() {
+  const { t, dir } = useLocale();
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -16,7 +18,7 @@ export default function GeneralReviewForm() {
     e.preventDefault();
     
     if (rating === 0) {
-      setMessage({ type: 'error', text: 'Bitte wähle eine Bewertung aus.' });
+      setMessage({ type: 'error', text: t('reviews.ratingRequired') });
       return;
     }
 
@@ -36,10 +38,10 @@ export default function GeneralReviewForm() {
       });
 
       if (!res.ok) {
-        throw new Error('Fehler beim Speichern der Bewertung');
+        throw new Error(t('reviews.error'));
       }
 
-      setMessage({ type: 'success', text: 'Vielen Dank für deine Bewertung!' });
+      setMessage({ type: 'success', text: t('reviews.success') });
       setRating(0);
       setComment('');
       setStudentName('');
@@ -50,24 +52,24 @@ export default function GeneralReviewForm() {
         window.location.reload();
       }, 1500);
     } catch (error) {
-      setMessage({ type: 'error', text: 'Etwas ist schiefgelaufen. Bitte versuche es erneut.' });
+      setMessage({ type: 'error', text: t('reviews.errorGeneric') });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-12 p-6 bg-neutral-100 dark:bg-neutral-900 rounded-lg border border-neutral-300 dark:border-neutral-800">
+    <form onSubmit={handleSubmit} className="mb-12 p-6 bg-neutral-100 dark:bg-neutral-900 rounded-lg border border-neutral-300 dark:border-neutral-800" dir={dir}>
       <h2 className="text-2xl font-semibold mb-4" style={{ color: '#C3E41D' }}>
-        Bewertung abgeben
+        {t('reviews.submitReview')}
       </h2>
       <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-6">
-        Teile deine Erfahrungen mit Rita Mahlis und ihren Dienstleistungen
+        {t('reviews.shareExperience', { name: t('author.nameShort') })}
       </p>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Bewertung *</label>
-        <div className="flex gap-1">
+        <label className="block text-sm font-medium mb-2">{t('reviews.rating')} *</label>
+        <div className={`flex gap-1 ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
@@ -91,7 +93,7 @@ export default function GeneralReviewForm() {
 
       <div className="mb-4">
         <label htmlFor="comment" className="block text-sm font-medium mb-2">
-          Kommentar (optional)
+          {t('reviews.commentOptional')}
         </label>
         <textarea
           id="comment"
@@ -99,13 +101,14 @@ export default function GeneralReviewForm() {
           onChange={(e) => setComment(e.target.value)}
           rows={4}
           className="w-full px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D]"
-          placeholder="Teile deine Erfahrungen..."
+          placeholder={t('reviews.commentPlaceholder')}
+          dir={dir}
         />
       </div>
 
       <div className="mb-4">
         <label htmlFor="studentName" className="block text-sm font-medium mb-2">
-          Name (optional)
+          {t('reviews.nameOptional')}
         </label>
         <input
           id="studentName"
@@ -114,19 +117,20 @@ export default function GeneralReviewForm() {
           onChange={(e) => setStudentName(e.target.value)}
           disabled={isAnonymous}
           className="w-full px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-lg text-black dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:border-[#C3E41D] disabled:opacity-50"
-          placeholder="Dein Name"
+          placeholder={t('reviews.namePlaceholder')}
+          dir={dir}
         />
       </div>
 
       <div className="mb-4">
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className={`flex items-center gap-2 cursor-pointer ${dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
           <input
             type="checkbox"
             checked={isAnonymous}
             onChange={(e) => setIsAnonymous(e.target.checked)}
             className="w-4 h-4 rounded border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-[#C3E41D] focus:ring-[#C3E41D]"
           />
-          <span className="text-sm text-neutral-600 dark:text-neutral-400">Anonym bewerten</span>
+          <span className="text-sm text-neutral-600 dark:text-neutral-400">{t('reviews.anonymous')}</span>
         </label>
       </div>
 
@@ -151,7 +155,7 @@ export default function GeneralReviewForm() {
           color: rating === 0 ? '#999' : '#000',
         }}
       >
-        {isSubmitting ? 'Wird gespeichert...' : 'Bewertung absenden'}
+        {isSubmitting ? t('reviews.saving') : t('reviews.submit')}
       </button>
     </form>
   );

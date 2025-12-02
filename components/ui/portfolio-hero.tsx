@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
+import { useLocale } from "@/lib/locale";
 
 // BlurText animation component
 interface BlurTextProps {
@@ -71,8 +72,28 @@ const BlurText: React.FC<BlurTextProps> = ({
 };
 
 export default function PortfolioHero() {
+  const { t, locale, dir } = useLocale();
+  
+  // Get name based on locale
+  const fullName = t('author.name');
+  
+  // For Arabic, show the full name as one unit (not split)
+  // For German, split into first and last name
+  const isArabic = locale === 'ar';
+  const nameParts = isArabic 
+    ? [fullName] // Arabic: keep as one unit "ريتا محليس"
+    : fullName.split(' '); // German: ["Rita", "Mahlis"]
+  
+  const firstName = isArabic ? fullName : (nameParts[0] || '');
+  const lastName = isArabic ? '' : (nameParts.slice(1).join(' ') || '');
+
+  // Font family based on language
+  const fontFamily = isArabic 
+    ? "'Cairo', sans-serif" 
+    : "'Fira Code', monospace";
+
   return (
-    <div className="min-h-screen text-foreground transition-colors">
+    <div className="min-h-screen text-foreground transition-colors" dir={dir}>
       {/* Hero Section */}
       <main className="relative min-h-screen flex flex-col">
         {/* Centered Main Name */}
@@ -80,30 +101,36 @@ export default function PortfolioHero() {
           <div className="relative text-center">
             <div>
               <BlurText
-                text="RITA"
+                text={isArabic ? fullName : firstName.toUpperCase()}
                 delay={100}
                 animateBy="letters"
                 direction="top"
-                className="font-bold text-[100px] sm:text-[140px] md:text-[180px] lg:text-[210px] leading-[0.75] tracking-tighter uppercase justify-center whitespace-nowrap"
-                style={{ color: "#C3E41D", fontFamily: "'Fira Code', monospace" }}
+                className={`font-bold text-[100px] sm:text-[140px] md:text-[180px] lg:text-[210px] leading-[0.75] tracking-tighter justify-center whitespace-nowrap ${isArabic ? '' : 'uppercase'}`}
+                style={{ 
+                  color: "#C3E41D", 
+                  fontFamily: fontFamily,
+                  fontWeight: isArabic ? 700 : 'bold'
+                }}
               />
             </div>
-            <div>
-              <BlurText
-                text="MAHLIS"
-                delay={100}
-                animateBy="letters"
-                direction="top"
-                className="font-bold text-[100px] sm:text-[140px] md:text-[180px] lg:text-[210px] leading-[0.75] tracking-tighter uppercase justify-center whitespace-nowrap"
-                style={{ color: "#C3E41D", fontFamily: "'Fira Code', monospace" }}
-              />
-            </div>
+            {!isArabic && lastName && (
+              <div>
+                <BlurText
+                  text={lastName.toUpperCase()}
+                  delay={100}
+                  animateBy="letters"
+                  direction="top"
+                  className="font-bold text-[100px] sm:text-[140px] md:text-[180px] lg:text-[210px] leading-[0.75] tracking-tighter uppercase justify-center whitespace-nowrap"
+                  style={{ color: "#C3E41D", fontFamily: fontFamily }}
+                />
+              </div>
+            )}
             {/* Profile Picture */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
               <div className="w-[65px] h-[110px] sm:w-[90px] sm:h-[152px] md:w-[110px] md:h-[185px] lg:w-[129px] lg:h-[218px] rounded-full overflow-hidden shadow-2xl transition-transform duration-300 hover:scale-110 cursor-pointer">
                 <img
                   src="https://i.ibb.co/pjR5D77Q/d680ab3e-e6aa-43fa-97c3-e111f002ae05.jpg"
-                  alt="Rita Mahlis"
+                  alt={t('author.name')}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -115,7 +142,7 @@ export default function PortfolioHero() {
         <div className="absolute bottom-16 sm:bottom-20 md:bottom-24 lg:bottom-32 xl:bottom-36 left-1/2 -translate-x-1/2 w-full px-6">
           <div className="flex justify-center">
             <BlurText
-              text="Journalismus & Online-Unterricht"
+              text={t('home.tagline')}
               delay={150}
               animateBy="words"
               direction="top"

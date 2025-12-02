@@ -27,11 +27,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" className="dark" dir="ltr" suppressHydrationWarning>
+    <html lang="de" className="dark" suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@700&family=Antic&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@700&family=Antic&family=Cairo:wght@400;600;700;900&display=swap"
         />
       </head>
       <body
