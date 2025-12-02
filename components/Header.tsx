@@ -59,6 +59,7 @@ export default function Header() {
     { label: t('nav.courses'), href: "/courses", highlight: pathname?.startsWith("/courses") },
     { label: t('nav.articles'), href: "/articles", highlight: pathname?.startsWith("/articles") },
     { label: t('nav.reviews'), href: "/reviews", highlight: pathname === "/reviews" },
+    { label: t('nav.about'), href: "/about", highlight: pathname === "/about" },
     { label: t('nav.contact'), href: "/contact", highlight: pathname === "/contact" },
   ];
 

@@ -20,6 +20,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.courses': 'KURSE',
     'nav.articles': 'ARTIKEL',
     'nav.reviews': 'BEWERTUNGEN',
+    'nav.about': 'ÜBER MICH',
     'nav.contact': 'KONTAKT',
     
     // Home
@@ -123,6 +124,23 @@ const translations: Record<Locale, Record<string, string>> = {
     'common.success': 'Erfolg',
     'common.required': 'Erforderlich',
     'common.optional': 'Optional',
+    
+    // About
+    'about.name': 'Rita Mahlis',
+    'about.subtitle': 'Journalistin & Forscherin',
+    'about.intro': 'Spezialistin für visuellen Journalismus und politische Kommunikation mit internationaler Erfahrung',
+    'about.education.title': 'Ausbildung',
+    'about.education.description': 'Rita Mahlis erwarb 2023 an der Freien Universität Berlin ihren Bachelorabschluss in Journalismus, Kommunikationswissenschaft und Politikwissenschaft. 2025 schloss sie an derselben Universität ihren Master in Medien- und politischer Kommunikation ab.',
+    'about.experience.title': 'Berufserfahrung',
+    'about.experience.description': 'Sie arbeitete in der Medien- und Übersetzungsabteilung der Botschaft Palästinas in Berlin und war als freie Journalistin und Lokalredakteurin bei der Hannoverschen Allgemeinen Zeitung tätig.',
+    'about.training.title': 'Internationale Erfahrung',
+    'about.training.description': 'Rita nahm an Trainingsprogrammen mit UNICEF teil und sammelte vertiefte Erfahrung in der Moderation von Fernsehsendungen durch ihre praktische Ausbildung beim Fernsehen Palästina und beim Sender Al Jazeera.',
+    'about.focus.title': 'Forschungsschwerpunkt',
+    'about.focus.description': 'Als Forscherin im Bereich Medien und Kommunikation konzentriert sie sich auf visuellen Journalismus und politische Kommunikation.',
+    'about.fullTitle': 'Über Rita Mahlis',
+    'about.fullDescription1': 'Rita Mahlis ist Journalistin sowie Forscherin im Bereich Medien und Kommunikation, mit Schwerpunkt auf visuellem Journalismus und politischer Kommunikation. Sie erwarb 2023 an der Freien Universität Berlin ihren Bachelorabschluss in Journalismus, Kommunikationswissenschaft und Politikwissenschaft und schloss 2025 an derselben Universität ihren Master in Medien- und politischer Kommunikation ab.',
+    'about.fullDescription2': 'Sie verfügt über berufliche Erfahrung im Medien- und Übersetzungsbereich: So arbeitete sie in der Medien- und Übersetzungsabteilung der Botschaft Palästinas in Berlin, zusätzlich zu ihrer Tätigkeit als freie Journalistin und Lokalredakteurin bei der deutschen Zeitung Hannoversche Allgemeine Zeitung.',
+    'about.fullDescription3': 'Rita nahm an Trainingsprogrammen mit internationalen Organisationen wie UNICEF teil und sammelte vertiefte Erfahrung in der Moderation von Fernsehsendungen durch ihre praktische Ausbildung beim Fernsehen Palästina und beim Sender Al Jazeera, der sie zudem einlud, am Forum der Journalismusfakultäten in der arabischen Welt in Doha teilzunehmen.',
   },
   ar: {
     // Navigation
@@ -130,6 +148,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.courses': 'الدورات',
     'nav.articles': 'المقالات',
     'nav.reviews': 'التقييمات',
+    'nav.about': 'عني',
     'nav.contact': 'اتصل بنا',
     
     // Home
@@ -233,6 +252,23 @@ const translations: Record<Locale, Record<string, string>> = {
     'common.success': 'نجح',
     'common.required': 'مطلوب',
     'common.optional': 'اختياري',
+    
+    // About
+    'about.name': 'ريتا محليس',
+    'about.subtitle': 'صحفية وباحثة',
+    'about.intro': 'متخصصة في الصحافة المرئية والاتصال السياسي مع خبرة دولية',
+    'about.education.title': 'التعليم',
+    'about.education.description': 'حصلت ريتا محليس على درجة البكالوريوس في الصحافة وعلوم الاتصال والعلوم السياسية من جامعة برلين الحرة عام 2023. وأنهت درجة الماجستير في الإعلام والاتصال السياسي عام 2025 في الجامعة نفسها.',
+    'about.experience.title': 'الخبرة المهنية',
+    'about.experience.description': 'عملت في قسم الإعلام والترجمة في سفارة فلسطين في برلين، وعملت كصحفية مستقلة ومحررة محلية في صحيفة Hannoversche Allgemeine Zeitung الألمانية.',
+    'about.training.title': 'الخبرة الدولية',
+    'about.training.description': 'شاركت ريتا في برامج تدريبية مع اليونيسف واكتسبت خبرة متقدمة في تقديم البرامج التلفزيونية من خلال تدريبها في تلفزيون فلسطين وقناة الجزيرة.',
+    'about.focus.title': 'مجال البحث',
+    'about.focus.description': 'كباحثة في مجال الإعلام والاتصال، تركز على الصحافة المرئية والاتصال السياسي.',
+    'about.fullTitle': 'عن ريتا محليس',
+    'about.fullDescription1': 'ريتا محليس صحفية وباحثة في الإعلام والاتصال، متخصصة في الصحافة المرئية والاتصال السياسي. حصلت على درجة البكالوريوس في الصحافة وعلوم الاتصال والعلوم السياسية من جامعة برلين الحرة عام 2023، وأنهت درجة الماجستير في الإعلام والاتصال السياسي عام 2025 في الجامعة نفسها.',
+    'about.fullDescription2': 'تمتلك خبرة مهنية في الإعلام والترجمة، حيث عملت في قسم الإعلام والترجمة في سفارة فلسطين في برلين، إلى جانب عملها كصحفية مستقلة ومحررة محلية في صحيفة Hannoversche Allgemeine Zeitung الألمانية.',
+    'about.fullDescription3': 'شاركت ريتا في برامج تدريبية مع مؤسسات دولية مثل اليونيسف، واكتسبت خبرة متقدمة في تقديم البرامج التلفزيونية عبر تدريبها في تلفزيون فلسطين وقناة الجزيرة، التي دعتها أيضًا للمشاركة في منتدى كليات الصحافة في العالم العربي في الدوحة.',
   },
 };
 

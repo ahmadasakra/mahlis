@@ -77,19 +77,17 @@ export default function PortfolioHero() {
   // Get name based on locale
   const fullName = t('author.name');
   
-  // For Arabic, show the full name as one unit (not split)
+  // For Arabic, split into two lines: "ريتا" and "محليس"
   // For German, split into first and last name
   const isArabic = locale === 'ar';
-  const nameParts = isArabic 
-    ? [fullName] // Arabic: keep as one unit "ريتا محليس"
-    : fullName.split(' '); // German: ["Rita", "Mahlis"]
+  const nameParts = fullName.split(' '); // Split by space: ["ريتا", "محليس"] or ["Rita", "Mahlis"]
   
-  const firstName = isArabic ? fullName : (nameParts[0] || '');
-  const lastName = isArabic ? '' : (nameParts.slice(1).join(' ') || '');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
 
-  // Font family based on language - using Tajawal for better Arabic letter connection
+  // Font family based on language - using Noto Kufi Arabic for classic Arabic calligraphy style
   const fontFamily = isArabic 
-    ? "'Tajawal', sans-serif" 
+    ? "'Noto Kufi Arabic', sans-serif" 
     : "'Fira Code', monospace";
 
   return (
@@ -99,9 +97,10 @@ export default function PortfolioHero() {
         {/* Centered Main Name */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-4">
           <div className="relative text-center">
+            {/* First Name / First Part */}
             <div className={isArabic ? 'rtl arabic-text' : ''}>
               <BlurText
-                text={isArabic ? fullName : firstName.toUpperCase()}
+                text={isArabic ? firstName : firstName.toUpperCase()}
                 delay={isArabic ? 50 : 100}
                 animateBy={isArabic ? "words" : "letters"}
                 direction="top"
@@ -121,15 +120,28 @@ export default function PortfolioHero() {
                 }}
               />
             </div>
-            {!isArabic && lastName && (
-              <div>
+            {/* Last Name / Second Part */}
+            {lastName && (
+              <div className={isArabic ? 'rtl arabic-text' : ''}>
                 <BlurText
-                  text={lastName.toUpperCase()}
-                  delay={100}
-                  animateBy="letters"
+                  text={isArabic ? lastName : lastName.toUpperCase()}
+                  delay={isArabic ? 50 : 100}
+                  animateBy={isArabic ? "words" : "letters"}
                   direction="top"
-                  className="font-bold text-[100px] sm:text-[140px] md:text-[180px] lg:text-[210px] leading-[0.75] tracking-tighter uppercase justify-center whitespace-nowrap"
-                  style={{ color: "#C3E41D", fontFamily: fontFamily }}
+                  className={`font-bold text-[100px] sm:text-[140px] md:text-[180px] lg:text-[210px] leading-[0.9] justify-center whitespace-nowrap ${isArabic ? 'rtl arabic-text' : 'uppercase tracking-tighter'}`}
+                  style={{ 
+                    color: "#C3E41D", 
+                    fontFamily: fontFamily,
+                    fontWeight: isArabic ? 900 : 'bold',
+                    letterSpacing: isArabic ? '0' : 'tighter',
+                    wordSpacing: isArabic ? '0.15em' : 'normal',
+                    textAlign: 'center',
+                    direction: isArabic ? 'rtl' : 'ltr',
+                    fontFeatureSettings: isArabic ? '"liga" 1, "kern" 1' : 'normal',
+                    textRendering: 'optimizeLegibility',
+                    WebkitFontSmoothing: 'antialiased',
+                    MozOsxFontSmoothing: 'grayscale'
+                  }}
                 />
               </div>
             )}
