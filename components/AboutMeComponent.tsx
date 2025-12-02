@@ -81,7 +81,7 @@ function AnimatedProfileImage({ src, alt }: AnimatedImageProps) {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full flex justify-center mb-16">
+    <div ref={containerRef} className="relative w-full flex justify-end mb-16 mt-4">
       <motion.div
         className="relative"
         style={{
@@ -148,24 +148,31 @@ export default function AboutMeComponent() {
   const profileImageSrc = 'https://i.ibb.co/s9k6KGLJ/5292233448183499712.jpg';
 
   return (
-    <div className="min-h-screen bg-background pt-24" dir={dir}>
+    <div className="min-h-screen bg-background pt-32" dir={dir}>
       <div className="container mx-auto px-6 pb-12 xl:px-12">
-        <div className="mb-12 text-center">
-          {/* Animated Profile Image */}
-          <AnimatedProfileImage 
-            src={profileImageSrc} 
-            alt={t('about.name')}
-          />
-          
-          <Text variant="heading-48" className="mb-4 text-foreground">
-            {t('about.name')}
-          </Text>
-          <Text variant="heading-24" className="mb-6 text-muted-foreground">
-            {t('about.subtitle')}
-          </Text>
-          <Text variant="copy-18" className="mx-auto max-w-3xl text-foreground/80">
-            {t('about.intro')}
-          </Text>
+        <div className="mb-12 pt-8">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12">
+            {/* Text Content - Left */}
+            <div className="flex-1 text-center md:text-left">
+              <Text variant="heading-48" className="mb-4 text-foreground">
+                {t('about.name')}
+              </Text>
+              <Text variant="heading-24" className="mb-6 text-muted-foreground">
+                {t('about.subtitle')}
+              </Text>
+              <Text variant="copy-18" className="max-w-3xl mx-auto md:mx-0 text-foreground/80">
+                {t('about.intro')}
+              </Text>
+            </div>
+            
+            {/* Animated Profile Image - Right */}
+            <div className="flex-shrink-0">
+              <AnimatedProfileImage 
+                src={profileImageSrc} 
+                alt={t('about.name')}
+              />
+            </div>
+          </div>
         </div>
 
         <ContainerScroll className="min-h-[150vh] space-y-8 py-8">
