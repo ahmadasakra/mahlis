@@ -168,11 +168,11 @@ export default function AboutMeComponent() {
           </Text>
         </div>
 
-        <ContainerScroll className="min-h-[400vh] space-y-8 py-12">
+        <ContainerScroll className="min-h-[150vh] space-y-8 py-8">
           {ABOUT_SECTIONS.map((section, index) => (
             <CardSticky
               key={section.id}
-              incrementY={20}
+              incrementY={15}
               index={index + 2}
               className="mx-auto flex h-80 w-full max-w-2xl flex-col justify-between rounded-2xl border border-border p-8 shadow-lg backdrop-blur-md"
               style={{
@@ -194,7 +194,7 @@ export default function AboutMeComponent() {
           ))}
         </ContainerScroll>
 
-        <div className="mt-12 text-center">
+        <div className="mt-8 text-center">
           <div className="mx-auto max-w-4xl rounded-2xl border border-border bg-card p-8 shadow-md">
             <Text variant="heading-24" className="mb-6 text-foreground">
               {t('about.fullTitle')}
