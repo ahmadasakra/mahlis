@@ -35,8 +35,8 @@ export default function AboutMeComponent() {
   const { t, dir } = useLocale();
 
   return (
-    <div className="min-h-screen bg-background" dir={dir}>
-      <div className="container mx-auto px-6 py-12 xl:px-12">
+    <div className="min-h-screen bg-background pt-24" dir={dir}>
+      <div className="container mx-auto px-6 pb-12 xl:px-12">
         <div className="mb-12 text-center">
           <Text variant="heading-48" className="mb-4 text-foreground">
             {t('about.name')}
