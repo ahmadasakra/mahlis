@@ -425,3 +425,26 @@
   padding-right: 1em;
   padding-left: 0;
 }
+
+/* Arabic Text Improvements */
+[dir="rtl"] {
+  font-feature-settings: "liga" 1, "kern" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure Arabic letters connect properly */
+.arabic-text,
+[dir="rtl"] {
+  font-variant-ligatures: common-ligatures;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+
+/* Better Arabic font rendering */
+@supports (font-variant-ligatures: common-ligatures) {
+  [dir="rtl"] {
+    font-variant-ligatures: common-ligatures contextual;
+  }
+}

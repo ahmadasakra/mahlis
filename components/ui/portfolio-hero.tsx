@@ -87,9 +87,9 @@ export default function PortfolioHero() {
   const firstName = isArabic ? fullName : (nameParts[0] || '');
   const lastName = isArabic ? '' : (nameParts.slice(1).join(' ') || '');
 
-  // Font family based on language
+  // Font family based on language - using Tajawal for better Arabic letter connection
   const fontFamily = isArabic 
-    ? "'Cairo', sans-serif" 
+    ? "'Tajawal', sans-serif" 
     : "'Fira Code', monospace";
 
   return (
@@ -99,17 +99,25 @@ export default function PortfolioHero() {
         {/* Centered Main Name */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-4">
           <div className="relative text-center">
-            <div>
+            <div className={isArabic ? 'rtl arabic-text' : ''}>
               <BlurText
                 text={isArabic ? fullName : firstName.toUpperCase()}
-                delay={100}
-                animateBy="letters"
+                delay={isArabic ? 50 : 100}
+                animateBy={isArabic ? "words" : "letters"}
                 direction="top"
-                className={`font-bold text-[100px] sm:text-[140px] md:text-[180px] lg:text-[210px] leading-[0.75] tracking-tighter justify-center whitespace-nowrap ${isArabic ? '' : 'uppercase'}`}
+                className={`font-bold text-[100px] sm:text-[140px] md:text-[180px] lg:text-[210px] leading-[0.9] justify-center whitespace-nowrap ${isArabic ? 'rtl arabic-text' : 'uppercase tracking-tighter'}`}
                 style={{ 
                   color: "#C3E41D", 
                   fontFamily: fontFamily,
-                  fontWeight: isArabic ? 700 : 'bold'
+                  fontWeight: isArabic ? 900 : 'bold',
+                  letterSpacing: isArabic ? '0' : 'tighter',
+                  wordSpacing: isArabic ? '0.15em' : 'normal',
+                  textAlign: 'center',
+                  direction: isArabic ? 'rtl' : 'ltr',
+                  fontFeatureSettings: isArabic ? '"liga" 1, "kern" 1' : 'normal',
+                  textRendering: 'optimizeLegibility',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale'
                 }}
               />
             </div>
@@ -147,7 +155,10 @@ export default function PortfolioHero() {
               animateBy="words"
               direction="top"
               className="text-[15px] sm:text-[18px] md:text-[20px] lg:text-[22px] text-center transition-colors duration-300 text-neutral-500 hover:text-black dark:hover:text-white"
-              style={{ fontFamily: "'Antic', sans-serif" }}
+              style={{ 
+                fontFamily: isArabic ? "'Cairo', sans-serif" : "'Antic', sans-serif",
+                direction: dir
+              }}
             />
           </div>
         </div>
