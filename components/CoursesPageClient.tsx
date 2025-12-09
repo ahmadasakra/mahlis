@@ -82,3 +82,5 @@ export default function CoursesPageClient({ courses }: CoursesPageClientProps) {
   );
 }
 
+
+

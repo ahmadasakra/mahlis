@@ -96,3 +96,5 @@ Stelle sicher, dass:
 2. Prüfe S3 Bucket Permissions
 3. Prüfe CORS Konfiguration
 
+
+

@@ -26,3 +26,5 @@ export default function ArticleClient({ articleId }: ArticleClientProps) {
   );
 }
 
+
+

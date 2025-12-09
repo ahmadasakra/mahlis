@@ -200,3 +200,5 @@ Bei Problemen:
 2. Prüfe die Heroku Dashboard für mehr Details
 3. Siehe [Heroku Next.js Documentation](https://devcenter.heroku.com/articles/deploying-nextjs-apps)
 
+
+
